@@ -211,6 +211,11 @@
       <div class="sidebar-item" data-panel="special_occasions"><span class="icon">🎉</span>Special Occasions</div>
       <div class="sidebar-item" data-panel="sport"><span class="icon">⚽</span>Sport</div>
       <div class="sidebar-item" data-panel="kpop"><span class="icon">🎵</span>K-Pop & Culture</div>
+      <div class="sidebar-item" data-panel="kdrama"><span class="icon">🎬</span>K-Drama Phrases</div>
+      <div class="sidebar-item" data-panel="everyday"><span class="icon">☀️</span>Everyday Korean</div>
+      <div class="sidebar-item" data-panel="texting"><span class="icon">💬</span>Texting & Chat</div>
+      <div class="sidebar-item" data-panel="love"><span class="icon">💕</span>Love & Relationships</div>
+      <div class="sidebar-item" data-panel="cafe"><span class="icon">☕</span>Café & Food Culture</div>
       <div class="sidebar-item" data-panel="slang"><span class="icon">😜</span>Slang & Internet</div>
       <div class="sidebar-item" data-panel="verbs"><span class="icon">🏃</span>Verbs</div>
       <div class="sidebar-item" data-panel="weather"><span class="icon">🌤️</span>Weather</div>
@@ -293,6 +298,11 @@
     <div class="panel" id="panel-slang"><div class="panel-header"><h2>😜 Slang & Internet Korean</h2><p>Modern Korean slang, abbreviations, and expressions used by young Koreans</p></div><div class="card-grid" id="grid-slang"></div></div>
     <div class="panel" id="panel-verbs"><div class="panel-header"><h2>🏃 Verbs</h2><p>Korean verbs end in 다 (da) in dictionary form. The stem changes when conjugating.</p></div><div class="card-grid" id="grid-verbs"></div></div>
     <div class="panel" id="panel-weather"><div class="panel-header"><h2>🌤️ Weather</h2></div><div class="card-grid" id="grid-weather"></div></div>
+    <div class="panel" id="panel-kdrama"><div class="panel-header"><h2>🎬 K-Drama Phrases</h2><p>Classic lines, expressions and words you'll hear constantly in Korean dramas</p></div><div class="card-grid" id="grid-kdrama"></div></div>
+    <div class="panel" id="panel-everyday"><div class="panel-header"><h2>☀️ Everyday Korean</h2><p>Words and phrases native Koreans actually use every day — the real stuff</p></div><div class="card-grid" id="grid-everyday"></div></div>
+    <div class="panel" id="panel-texting"><div class="panel-header"><h2>💬 Texting & Chat</h2><p>KakaoTalk, Instagram DMs, and how Koreans write on their phones</p></div><div class="card-grid" id="grid-texting"></div></div>
+    <div class="panel" id="panel-love"><div class="panel-header"><h2>💕 Love & Relationships</h2><p>Dating vocab, couple terms, and everything from first crush to heartbreak</p></div><div class="card-grid" id="grid-love"></div></div>
+    <div class="panel" id="panel-cafe"><div class="panel-header"><h2>☕ Café & Food Culture</h2><p>Korea's café obsession, street food, and food-related phrases Koreans live by</p></div><div class="card-grid" id="grid-cafe"></div></div>
 
     <!-- INTERMEDIATE -->
     <div class="panel" id="panel-intro_intermediate">
@@ -715,6 +725,24 @@ const VOCAB = {
     {rom:"mollayo",kr:"몰라요",en:"I don't know"},
     {rom:"gachi hae-yo",kr:"같이 해요",en:"Let's do it together"},
     {rom:"honja",kr:"혼자",en:"Alone / By oneself"},
+    {rom:"eotteoke hae?",kr:"어떻게 해?",en:"What do I do? / How do I do this?"},
+    {rom:"geunde wae?",kr:"근데 왜?",en:"But why? (very natural, used all the time)"},
+    {rom:"na jom isseo bwa",kr:"나 좀 있어봐",en:"Wait for me a second"},
+    {rom:"jom deo isseo bwa",kr:"좀 더 있어봐",en:"Stay a little longer"},
+    {rom:"himnaera",kr:"힘내라",en:"Cheer up! / You can do it! (encouragement)"},
+    {rom:"himeul naebwa",kr:"힘을 내봐",en:"Try to cheer up / Gather your strength"},
+    {rom:"gomawo",kr:"고마워",en:"Thanks (casual — to friends)"},
+    {rom:"gomawoyo",kr:"고마워요",en:"Thank you (informal polite)"},
+    {rom:"jeongmal?",kr:"정말?",en:"Really? (most natural way to say really)"},
+    {rom:"seol-ma",kr:"설마",en:"No way / Surely not (disbelief)"},
+    {rom:"geureom",kr:"그럼",en:"Of course / Then / Well (very versatile)"},
+    {rom:"geureomyo",kr:"그럼요",en:"Of course! (polite — very useful)"},
+    {rom:"neo mu hae",kr:"너무해",en:"That's too much / That's not fair / How could you"},
+    {rom:"eoksul hae",kr:"억울해",en:"It's unfair / I feel wronged"},
+    {rom:"mweonka iseo",kr:"뭔가 있어",en:"There's something / Something's up"},
+    {rom:"namsaem",kr:"남사스럽다",en:"Embarrassing / Cringe (watching something embarrassing)"},
+    {rom:"bunhae",kr:"분해",en:"So frustrating / Infuriating"},
+    {rom:"eottaeyo jongmal",kr:"어때요 정말",en:"How is it really? / What do you honestly think?"},
   ],
   cooking:[
     {rom:"bap-eul jit-da",kr:"밥을 짓다",en:"Cook rice"},
@@ -1290,6 +1318,240 @@ const VOCAB = {
     {rom:"nyeon",kr:"년",en:"Years"},
     {rom:"tu myeong",kr:"두 명",en:"Two people (use 두 not 이)"},
   ],
+
+  // ============================================================
+  //  K-DRAMA PHRASES
+  // ============================================================
+  kdrama:[
+    // THE CLASSICS you hear in every drama
+    {rom:"naega wae geurae야 hae?",kr:"내가 왜 그래야 해?",en:"Why do I have to do that? (frustrated character)"},
+    {rom:"jebal",kr:"제발",en:"Please / I beg you (desperate plea — heard constantly)"},
+    {rom:"sikkeureowo",kr:"시끄러워",en:"Be quiet! / Shut up! (rude but common in dramas)"},
+    {rom:"naneun gwaenchana",kr:"나는 괜찮아",en:"I'm fine (said when clearly NOT fine — classic drama line)"},
+    {rom:"neo ttaemune",kr:"너 때문에",en:"Because of you! (blaming someone — very common in conflicts)"},
+    {rom:"imi neujeo-sseo",kr:"이미 늦었어",en:"It's already too late"},
+    {rom:"mworago?",kr:"뭐라고?",en:"What did you say?! (shocked/angry reaction)"},
+    {rom:"geugeon aniya",kr:"그건 아니야",en:"That's not it / That's wrong"},
+    {rom:"eotteoke geurae?",kr:"어떻게 그래?",en:"How could you do that?!"},
+    {rom:"nareul itji ma",kr:"나를 잊지 마",en:"Don't forget me (emotional farewell)"},
+    {rom:"bogoshipeo",kr:"보고 싶어",en:"I miss you (one of the most heard lines in K-dramas)"},
+    {rom:"saranghae",kr:"사랑해",en:"I love you (casual — the big confession moment)"},
+    {rom:"saranghaeyo",kr:"사랑해요",en:"I love you (polite — to someone older)"},
+    {rom:"na ireoke sal su eopseo",kr:"나 이렇게 살 수 없어",en:"I can't live like this"},
+    {rom:"nae gyeote isseojwo",kr:"내 곁에 있어줘",en:"Stay by my side"},
+    {rom:"uli geureon sai ya?",kr:"우리 그런 사이야?",en:"Are we that kind of relationship? (defining the relationship)"},
+    {rom:"neomu himdeuro",kr:"너무 힘들어",en:"It's too hard / I'm exhausted"},
+    {rom:"da gwaenchanha",kr:"다 괜찮아",en:"Everything will be OK (reassuring someone)"},
+    {rom:"wae nareul geobu hae?",kr:"왜 나를 거부해?",en:"Why do you reject me?"},
+    {rom:"neo mot hae",kr:"너 못 해",en:"You can't do it (challenging someone)"},
+    {rom:"nega piryohae",kr:"네가 필요해",en:"I need you"},
+    {rom:"gaji ma",kr:"가지 마",en:"Don't go (emotional — grabbing someone's wrist in dramas)"},
+    {rom:"dasi mannal su isseo?",kr:"다시 만날 수 있어?",en:"Can we meet again?"},
+    {rom:"na eottae?",kr:"나 어때?",en:"How do I look? / What do you think of me?"},
+    {rom:"neon naege sonjjapda",kr:"넌 내게 손 잡다",en:"You grabbed my hand (romantic drama moment)"},
+    {rom:"uri cheontaek haeyahaeteo",kr:"우리 선택해야했어",en:"We had to choose (dramatic choice scene)"},
+    {rom:"geumanhae",kr:"그만해",en:"Stop it / That's enough"},
+    {rom:"jakku wae geurae",kr:"자꾸 왜 그래",en:"Why do you keep doing this?"},
+    {rom:"eodi ga?",kr:"어디 가?",en:"Where are you going?"},
+    {rom:"dallyeo",kr:"달려",en:"Run! (action scene staple)"},
+    {rom:"ppalli wa",kr:"빨리 와",en:"Come quickly! / Hurry up and come!"},
+    {rom:"neol jikyeo julge",kr:"널 지켜줄게",en:"I'll protect you (hero line)"},
+    {rom:"neol mit-jji anha",kr:"널 믿지 않아",en:"I don't trust you"},
+    {rom:"baro neo ya",kr:"바로 너야",en:"It's you. It's always been you (romantic reveal)"},
+    {rom:"naneun babo ya",kr:"나는 바보야",en:"I'm an idiot (self-deprecating — very common in dramas)"},
+    {rom:"hajima",kr:"하지 마",en:"Don't do it / Stop (urgent command)"},
+    {rom:"uli ileohji malcha",kr:"우리 이러지 말자",en:"Let's not be like this"},
+    {rom:"neon neon naega jigyeowo?",kr:"넌 내가 지겨워?",en:"Are you sick of me?"},
+    {rom:"naega tteona ya hae?",kr:"내가 떠나야 해?",en:"Do I have to leave?"},
+    {rom:"yeogi itseora",kr:"여기 있어라",en:"Stay here / Don't move"},
+    {rom:"uri nal bolkka?",kr:"우리 날 볼까?",en:"Shall we see each other? (asking someone out)"},
+  ],
+
+  // ============================================================
+  //  EVERYDAY KOREAN — real native usage
+  // ============================================================
+  everyday:[
+    // Filler words & natural responses
+    {rom:"eung",kr:"응",en:"Yeah / Uh-huh (casual agreement — said constantly)"},
+    {rom:"aah",kr:"아",en:"Ah / Oh (realisation — like 'oh I see')"},
+    {rom:"eo",kr:"어",en:"Um / Yeah (super casual yes)"},
+    {rom:"geunde",kr:"근데",en:"But / By the way (used to change topic)"},
+    {rom:"geurigo",kr:"그리고",en:"And / Also (connecting sentences)"},
+    {rom:"geuraeseo",kr:"그래서",en:"So / Therefore (explaining cause)"},
+    {rom:"seo so",kr:"그래도",en:"Still / Even so / Nevertheless"},
+    {rom:"amteon",kr:"암튼",en:"Anyway / In any case (shortening of 아무튼)"},
+    {rom:"eotjepi",kr:"어쨌든",en:"Anyway / Regardless"},
+    {rom:"meonya",kr:"머야",en:"What is this? / What the heck (casual 뭐야)"},
+    {rom:"wae",kr:"왜",en:"Why? (can sound rude — soften with 왜요)"},
+    {rom:"eodi",kr:"어디",en:"Where? (casual)"},
+    {rom:"eonje",kr:"언제",en:"When?"},
+    {rom:"eotteoke",kr:"어떻게",en:"How? / In what way?"},
+    {rom:"eolma",kr:"얼마",en:"How much?"},
+    {rom:"myeot",kr:"몇",en:"How many?"},
+    // Things Koreans say all the time
+    {rom:"wasseo",kr:"왔어",en:"(You) came / You're here! (greeting when someone arrives)"},
+    {rom:"ga",kr:"가",en:"Go (casual command — can be rude to elders)"},
+    {rom:"meokja",kr:"먹자",en:"Let's eat (very common — Koreans love food)"},
+    {rom:"mwo meokeo?",kr:"뭐 먹어?",en:"What are you eating? (common filler question)"},
+    {rom:"bap meogeotseo?",kr:"밥 먹었어?",en:"Did you eat? (caring check-in, not literal)"},
+    {rom:"nwae wasseo?",kr:"왜 왔어?",en:"Why did you come? (casual, can be teasing)"},
+    {rom:"jal ja",kr:"잘 자",en:"Sleep well / Good night (casual)"},
+    {rom:"jal jasseo?",kr:"잘 잤어?",en:"Did you sleep well?"},
+    {rom:"hing",kr:"힝",en:"Whimper / Sulking sound (text/speech)"},
+    {rom:"woo~",kr:"우~",en:"Ooh / Wow (impressed reaction)"},
+    {rom:"eo, jinja?",kr:"어, 진짜?",en:"Oh, really? (the most natural response ever)"},
+    {rom:"mwo hae?",kr:"뭐 해?",en:"What are you doing? (casual check-in)"},
+    {rom:"simsim hae",kr:"심심해",en:"I'm bored (said all the time)"},
+    {rom:"neomu pigonhae",kr:"너무 피곤해",en:"I'm so tired"},
+    {rom:"joha joha",kr:"좋아 좋아",en:"OK OK / Fine fine (agreeing quickly)"},
+    {rom:"eung eung",kr:"응응",en:"Yeah yeah (double agreement, very casual)"},
+    {rom:"mollasseo",kr:"몰랐어",en:"I didn't know (common reaction)"},
+    {rom:"arasseo",kr:"알았어",en:"Got it / Understood (casual acknowledgment)"},
+    {rom:"isseo isseo",kr:"있어 있어",en:"It's there, it's there / Don't worry it exists"},
+    {rom:"haesseo",kr:"했어",en:"(I) did it / Done (casual past)"},
+    {rom:"andwae",kr:"안돼",en:"No way / Can't do it / Not allowed"},
+    {rom:"dwaesseo",kr:"됐어",en:"It's done / Forget it / That's enough (context-dependent)"},
+    {rom:"seongjil geop-na",kr:"성질 겁나",en:"So annoying / What a temper (casual complaint)"},
+    {rom:"geol lyeo",kr:"걸려",en:"Caught / Took a long time / It's hanging on"},
+    {rom:"isseul geya",kr:"있을 거야",en:"It'll be there / There should be"},
+    {rom:"gwaenchana gwaenchana",kr:"괜찮아 괜찮아",en:"It's fine, it's fine (reassuring)"},
+    {rom:"eottaeyo?",kr:"어때요?",en:"How is it? / What do you think? (asking for opinion)"},
+    {rom:"mwonji moreu-ge-sseo",kr:"뭔지 모르겠어",en:"I don't know what it is"},
+    {rom:"majji?",kr:"맞지?",en:"Right? / Isn't that right? (seeking confirmation)"},
+    {rom:"geurae geurae",kr:"그래 그래",en:"OK OK / Alright alright (agreeing to end a topic)"},
+  ],
+
+  // ============================================================
+  //  TEXTING & CHAT — KakaoTalk / Instagram / phone culture
+  // ============================================================
+  texting:[
+    {rom:"ㅋㅋㅋ",kr:"ㅋㅋㅋ",en:"LOL / haha (ㅋ = the k sound, like laughing keke)"},
+    {rom:"ㅎㅎ",kr:"ㅎㅎ",en:"hehe / gentle laugh (softer than ㅋㅋ)"},
+    {rom:"ㅠㅠ",kr:"ㅠㅠ",en:"Crying face / so sad TT"},
+    {rom:"ㅇㅇ",kr:"ㅇㅇ",en:"Yeah / OK (shortening of 응응)"},
+    {rom:"ㄴㄴ",kr:"ㄴㄴ",en:"No no / Nope (shortening of 노노)"},
+    {rom:"ㄱㄱ",kr:"ㄱㄱ",en:"Let's go / Go go (shortening of 고고)"},
+    {rom:"ㅇㅋ",kr:"ㅇㅋ",en:"OK (Korean texting for okay)"},
+    {rom:"ㅁㄹ",kr:"ㅁㄹ",en:"Don't know / IDK (모름 abbreviated)"},
+    {rom:"ㄷㄷ",kr:"ㄷㄷ",en:"Shivering/scared (두두 — trembling)"},
+    {rom:"ㅂㅂ",kr:"ㅂㅂ",en:"Bye bye (바이바이 abbreviated)"},
+    {rom:"ㅈㅅ",kr:"ㅈㅅ",en:"Sorry (죄송 abbreviated — super casual apology)"},
+    {rom:"nm",kr:"ㄴㅁ",en:"What's up? (뭐 나 abbreviated casual)"},
+    {rom:"jal jinaeyo?",kr:"잘 지내요?",en:"How are you? (standard text opener)"},
+    {rom:"bogo sipeo ㅠㅠ",kr:"보고 싶어 ㅠㅠ",en:"I miss you 😢 (standard sad text)"},
+    {rom:"mwo hae?",kr:"뭐 해?",en:"What are you doing? (classic KakaoTalk opener)"},
+    {rom:"namsaem",kr:"남사쓰",en:"남사스럽다 — so embarrassing (texting abbreviation)"},
+    {rom:"ga-seom",kr:"가슴",en:"Heart / chest (used in emotional texts — 'my heart hurts')"},
+    {rom:"dab jwa",kr:"답줘",en:"Reply to me / Text me back"},
+    {rom:"dab wae eopseo?",kr:"답 왜 없어?",en:"Why aren't you replying? (left on read frustration)"},
+    {rom:"ilko museonseo",kr:"읽고 무선서",en:"Read and no reply (being left on read)"},
+    {rom:"chon",kr:"촌",en:"Block / Deleted (being blocked on KakaoTalk)"},
+    {rom:"namsaeng",kr:"남생",en:"Boyfriend (남자친구 abbreviated in texts)"},
+    {rom:"yeosaeng",kr:"여생",en:"Girlfriend (여자친구 abbreviated in texts)"},
+    {rom:"insta haesseo?",kr:"인스타 했어?",en:"Did you post on Instagram?"},
+    {rom:"DM bonaesseo",kr:"DM 보냈어",en:"I sent you a DM"},
+    {rom:"seutori bwasseo",kr:"스토리 봤어",en:"I saw your story (Instagram)"},
+    {rom:"jongil haeyo?",kr:"통화할까요?",en:"Shall we call? (asking to move from text to call)"},
+    {rom:"neon giphin",kr:"넌 기픈",en:"You're deep / You think a lot (thoughtful person)"},
+    {rom:"ttok",kr:"톡",en:"Talk / KakaoTalk message (send me a tok = message me)"},
+    {rom:"ttok haesseo?",kr:"톡 했어?",en:"Did you message me? / Did you KakaoTalk?"},
+  ],
+
+  // ============================================================
+  //  LOVE & RELATIONSHIPS
+  // ============================================================
+  love:[
+    {rom:"saranghae",kr:"사랑해",en:"I love you (casual — to close partner)"},
+    {rom:"saranghaeyo",kr:"사랑해요",en:"I love you (polite)"},
+    {rom:"bogoshipeo",kr:"보고 싶어",en:"I miss you"},
+    {rom:"neo saengak hae",kr:"너 생각해",en:"I'm thinking of you"},
+    {rom:"nam-ja-chin-gu saenggyeo-sseo",kr:"남자친구 생겼어",en:"I got a boyfriend"},
+    {rom:"yeo-ja-chin-gu saenggyeo-sseo",kr:"여자친구 생겼어",en:"I got a girlfriend"},
+    {rom:"sori jeongguk",kr:"썸 타다",en:"Sseum tада — in the 'talking' / flirting stage"},
+    {rom:"sseum",kr:"썸",en:"The 'almost dating' stage (between friends and couple)"},
+    {rom:"gobaek hada",kr:"고백하다",en:"Confess feelings / Ask someone out"},
+    {rom:"gobaek badeot-seo",kr:"고백 받았어",en:"I received a confession (someone asked me out)"},
+    {rom:"sagwi-ja",kr:"사귀자",en:"Let's date / Be my girlfriend/boyfriend (official)"},
+    {rom:"sagwi-eo",kr:"사귀어",en:"We're dating (statement)"},
+    {rom:"jom deo gakkai waseo",kr:"좀 더 가까이 와서",en:"Come a little closer"},
+    {rom:"soni jabgo sipeo",kr:"손이 잡고 싶어",en:"I want to hold your hand"},
+    {rom:"pok andajwo",kr:"폭 안아줘",en:"Give me a big hug"},
+    {rom:"du balsaen",kr:"두 발산",en:"Butterflies (lit. 'two feet')"},
+    {rom:"seolleni",kr:"설레니",en:"Does your heart flutter? (asking if they like you)"},
+    {rom:"seolleyeo",kr:"설레요",en:"My heart flutters / I feel butterflies"},
+    {rom:"jeongmal joahae",kr:"정말 좋아해",en:"I really like you"},
+    {rom:"nae yeoja/namja ya",kr:"내 여자/남자야",en:"You're my girl/guy"},
+    {rom:"uri sae haessal",kr:"우리 100일",en:"Our 100-day anniversary (big deal in Korea)"},
+    {rom:"ginyeomil",kr:"기념일",en:"Anniversary"},
+    {rom:"keoppeul",kr:"커플",en:"Couple"},
+    {rom:"keoppeul aitem",kr:"커플 아이템",en:"Couple items (matching clothes/accessories — very common)"},
+    {rom:"haeeojyeo",kr:"헤어져",en:"Break up with me / We broke up"},
+    {rom:"haeojyeosseo",kr:"헤어졌어",en:"We broke up (past)"},
+    {rom:"yeonragi kkeunheosseo",kr:"연락이 끊혔어",en:"He/she cut off contact (ghosted)"},
+    {rom:"chamseo",kr:"참서",en:"Ghosting (suddenly stopping contact)"},
+    {rom:"neon nae taebiyeonsarangie",kr:"넌 내 태비연사랑이야",en:"You're my first love"},
+    {rom:"cheotsarang",kr:"첫사랑",en:"First love"},
+    {rom:"jjagjasarang",kr:"짝사랑",en:"One-sided love / Unrequited love"},
+    {rom:"namjachinguham",kr:"남자친구함",en:"Boyfriend material (he's boyfriend material)"},
+    {rom:"ideal-hyeong",kr:"이상형",en:"Ideal type (your ideal partner — common date question)"},
+    {rom:"ne ideal-hyeong eoddae?",kr:"네 이상형 어때?",en:"What's your ideal type? (classic flirting question)"},
+    {rom:"nun-i mat-da",kr:"눈이 맞다",en:"Eyes met / There's a spark between them"},
+    {rom:"nunbichaenghwa",kr:"눈빛교환",en:"Eye contact chemistry (exchanging glances)"},
+    {rom:"simkung",kr:"심쿵",en:"Heart drop / Heart skip — sudden attraction"},
+    {rom:"doki doki",kr:"두근두근",en:"Heart pounding / Thump thump (excitement or nerves)"},
+  ],
+
+  // ============================================================
+  //  CAFÉ & FOOD CULTURE
+  // ============================================================
+  cafe:[
+    // ORDERING IN A KOREAN CAFÉ
+    {rom:"Americano juseyo",kr:"아메리카노 주세요",en:"Americano please (most ordered coffee in Korea)"},
+    {rom:"aisu juseyo",kr:"아이스로 주세요",en:"Make it iced please"},
+    {rom:"tteugeoungeuro juseyo",kr:"뜨거운걸로 주세요",en:"Make it hot please"},
+    {rom:"dangeom juripda",kr:"단거 줄이다",en:"Less sweet please"},
+    {rom:"yeogiyo, teuk-daehan juseyo",kr:"여기서 드실 건가요?",en:"For here or to go? (staff asking you)"},
+    {rom:"gajeogo gal geyo",kr:"가져갈 거예요",en:"To go / Takeaway"},
+    {rom:"yeogi meogeo gal geyo",kr:"여기서 먹고 갈게요",en:"I'll eat here"},
+    {rom:"keopi han jan juseyo",kr:"커피 한 잔 주세요",en:"One coffee please"},
+    // DRINKS KOREANS LOVE
+    {rom:"dalalgona keopi",kr:"달고나 커피",en:"Dalgona coffee (whipped coffee — went viral)"},
+    {rom:"dolgona latte",kr:"달고나 라떼",en:"Dalgona latte"},
+    {rom:"matcha latte",kr:"말차 라떼",en:"Matcha latte (hugely popular in Korean cafés)"},
+    {rom:"brown sugar latte",kr:"흑당 라떼",en:"Brown sugar milk tea / latte"},
+    {rom:"sikhye",kr:"식혜",en:"Traditional sweet rice drink (café version)"},
+    {rom:"yugwa",kr:"유과",en:"Traditional Korean fried cookie with café order"},
+    {rom:"toast",kr:"토스트",en:"Korean-style toasted sandwich (street/café food)"},
+    // FOOD CULTURE PHRASES
+    {rom:"meokbang",kr:"먹방",en:"Mukbang — eating broadcast (food content videos)"},
+    {rom:"meokbang hada",kr:"먹방 하다",en:"To do a mukbang"},
+    {rom:"matjip",kr:"맛집",en:"A delicious restaurant / famous food spot"},
+    {rom:"matjip chajda",kr:"맛집 찾다",en:"Look for a good restaurant"},
+    {rom:"julyeogo gada",kr:"줄 서다",en:"Queue up (Koreans queue for popular food spots)"},
+    {rom:"yeakhaesseo",kr:"예약했어",en:"I made a reservation"},
+    {rom:"mashisseo bo yeo",kr:"맛있어 보여",en:"Looks delicious / That looks good"},
+    {rom:"neomu mashisseo",kr:"너무 맛있어",en:"So delicious (casual)"},
+    {rom:"jeongmal mashisseoyo",kr:"정말 맛있어요",en:"Really delicious (polite)"},
+    {rom:"maseo jugeosseo",kr:"맛으로 죽겠어",en:"Dying of deliciousness (exaggerated compliment)"},
+    {rom:"hok-si gachi meokeo?",kr:"혹시 같이 먹어?",en:"Want to eat together by any chance?"},
+    {rom:"cheoncheonhi meokeo",kr:"천천히 먹어",en:"Eat slowly / Take your time eating"},
+    {rom:"manhi meokeo",kr:"많이 먹어",en:"Eat a lot (said to guests — Korean hospitality)"},
+    {rom:"siksahal ttaeya",kr:"식사할 때야",en:"It's meal time"},
+    {rom:"bae bul leo",kr:"배 불러",en:"I'm stuffed / So full (casual)"},
+    {rom:"sogiga eopsseo",kr:"소화가 안 돼",en:"I have indigestion"},
+    {rom:"ipmasin",kr:"입맛",en:"Appetite / Taste preference"},
+    {rom:"ipmasieul dont-uro itda",kr:"입맛이 없다",en:"I have no appetite"},
+    // STREET FOOD CULTURE
+    {rom:"pojangmacha",kr:"포장마차",en:"Street food stall / Pojangmacha tent bar"},
+    {rom:"tteokbokki meokja",kr:"떡볶이 먹자",en:"Let's eat tteokbokki (classic street food hangout)"},
+    {rom:"chimaek",kr:"치맥",en:"Chicken + maekju = fried chicken and beer (iconic combo)"},
+    {rom:"chimaek haja",kr:"치맥 하자",en:"Let's do chimaek (fried chicken + beer night)"},
+    {rom:"ramyeon meokgo ga?",kr:"라면 먹고 갈래?",en:"Wanna come in for ramyeon? (Korean euphemism — drama staple!)"},
+    {rom:"haesik",kr:"해식",en:"Seafood (해산물 — coastal food culture)"},
+    {rom:"bapsang",kr:"밥상",en:"Set table with many side dishes (Korean meal style)"},
+    {rom:"banchan",kr:"반찬",en:"Side dishes served with rice (always included)"},
+    {rom:"gukbap",kr:"국밥",en:"Rice in soup (classic hangover / comfort food)"},
+  ],
 };
 
 // ============================================================
@@ -1621,7 +1883,7 @@ const TOPIC_LABELS={
   health:"Health",holidays:"Holidays",home:"Home",machines:"Machines",motoring:"Motoring",
   people:"People",places:"Places",professions:"Professions",pronouns:"Pronouns",
   school:"School",seasons:"Seasons",special_occasions:"Special Occasions",sport:"Sport",
-  kpop:"K-Pop & Culture",slang:"Slang & Internet",verbs:"Verbs",weather:"Weather",counters:"Counters",
+  kpop:"K-Pop & Culture",kdrama:"K-Drama Phrases",everyday:"Everyday Korean",texting:"Texting & Chat",love:"Love & Relationships",cafe:"Café & Food Culture",slang:"Slang & Internet",verbs:"Verbs",weather:"Weather",counters:"Counters",
 };
 
 function buildPool(topicKeys){const pool=[];topicKeys.forEach(k=>{if(VOCAB[k])VOCAB[k].forEach(item=>pool.push({item,topic:k}));});return pool;}
