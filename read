@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Korean Study Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0e0f13;--surface:#161820;--surface2:#1e2028;--border:#2a2c36;--accent:#e8b86d;--accent2:#6d9ee8;--accent3:#e86d8c;--text:#e8e4dc;--text-muted:#7a7a8c;--text-dim:#4a4a5c;--green:#6dcc9e;--red:#e86d6d;--sidebar-w:260px;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+    .top-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:200;}
+    .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;}
+    .logo{font-family:'Noto Sans KR',sans-serif;font-size:1.3rem;font-weight:700;color:var(--accent);letter-spacing:.02em;flex:1;}
+    .logo span{color:var(--text-muted);font-size:.85rem;font-family:'DM Sans',sans-serif;font-weight:400;margin-left:.5rem;}
+    .top-search{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.4rem .9rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;width:220px;outline:none;transition:border-color .2s;}
+    .top-search:focus{border-color:var(--accent);}
+    .top-search::placeholder{color:var(--text-dim);}
+    .layout{display:flex;flex:1;overflow:hidden;}
+    .sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;height:calc(100vh - 54px);position:sticky;top:54px;}
+    .sidebar::-webkit-scrollbar{width:4px;}
+    .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+    .sidebar-section{padding:1rem 0 .5rem;}
+    .sidebar-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);padding:0 1rem .4rem;}
+    .sidebar-item{display:flex;align-items:center;gap:.6rem;padding:.5rem 1rem;cursor:pointer;font-size:.88rem;color:var(--text-muted);border-left:3px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .sidebar-item:hover{background:var(--surface2);color:var(--text);}
+    .sidebar-item.active{background:var(--surface2);color:var(--accent);border-left-color:var(--accent);font-weight:600;}
+    .sidebar-item .icon{font-size:.95rem;flex-shrink:0;}
+    .sidebar-divider{height:1px;background:var(--border);margin:.5rem 1rem;}
+    .main{flex:1;overflow-y:auto;padding:2rem;}
+    .main::-webkit-scrollbar{width:6px;}
+    .main::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+    .panel{display:none;animation:fadein .2s ease;}
+    .panel.active{display:block;}
+    @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+    .panel-header{margin-bottom:1.5rem;}
+    .panel-header h2{font-family:'Noto Sans KR',sans-serif;font-size:1.6rem;color:var(--accent);margin-bottom:.3rem;}
+    .panel-header p{color:var(--text-muted);font-size:.9rem;}
+
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;}
+    .vocab-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem;transition:border-color .2s,transform .2s;position:relative;}
+    .vocab-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+    .card-roman{font-family:'Space Mono',monospace;font-size:.95rem;font-weight:700;margin-bottom:.4rem;color:var(--accent2);}
+    .card-hangul{font-family:'Noto Sans KR',sans-serif;font-size:1.5rem;color:var(--text);margin-bottom:.4rem;letter-spacing:.05em;font-weight:700;}
+    .card-meaning{font-size:.88rem;color:var(--text-muted);border-left:2px solid var(--accent2);padding-left:.6rem;line-height:1.5;margin-bottom:.8rem;}
+    .card-buttons{display:flex;gap:.4rem;flex-wrap:wrap;}
+    .listen-group{display:inline-flex;border-radius:6px;overflow:hidden;border:1px solid var(--border);}
+    .listen-normal,.listen-slow{background:var(--surface2);border:none;padding:.3rem .7rem;color:var(--text-muted);font-size:.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+    .listen-normal{border-right:1px solid var(--border);}
+    .listen-normal:hover,.listen-slow:hover{background:var(--accent);color:var(--bg);}
+    .card-record{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.3rem .8rem;color:var(--text-muted);font-size:.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;font-family:'DM Sans',sans-serif;}
+    .card-record:hover{background:var(--accent2);color:var(--bg);border-color:var(--accent2);}
+    .rec-badge{position:absolute;top:.6rem;right:.6rem;background:var(--accent2);color:var(--bg);font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:8px;letter-spacing:.04em;}
+
+    .wide-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;margin-bottom:1rem;}
+    .wide-card h3{font-family:'Space Mono',monospace;font-size:.95rem;color:var(--accent2);margin-bottom:.6rem;}
+    .wide-card p{font-size:.88rem;color:var(--text-muted);line-height:1.7;}
+    .wide-card .examples{margin-top:.8rem;display:flex;flex-direction:column;gap:.4rem;}
+    .example-row{display:flex;gap:1rem;align-items:center;padding:.4rem .7rem;background:var(--surface2);border-radius:7px;flex-wrap:wrap;}
+    .ex-jp{font-family:'Space Mono',monospace;font-size:.88rem;color:var(--accent);min-width:160px;}
+    .ex-en{font-size:.85rem;color:var(--text-muted);flex:1;}
+    .ex-listen{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.9rem;padding:.1rem .3rem;transition:color .15s;flex-shrink:0;}
+    .ex-listen:hover{color:var(--accent);}
+
+    .convo-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;margin-bottom:1rem;}
+    .convo-card h3{font-family:'Noto Sans KR',sans-serif;font-size:1.1rem;color:var(--accent);margin-bottom:.8rem;}
+    .convo-line{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:.6rem .8rem;align-items:start;padding:.5rem .7rem;border-radius:8px;margin-bottom:.3rem;}
+    .convo-line:nth-child(odd){background:var(--surface2);}
+    .speaker-tag{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;align-self:center;}
+    .tag-a{background:rgba(232,184,109,.15);color:var(--accent);}
+    .tag-b{background:rgba(109,158,232,.15);color:var(--accent2);}
+    .convo-hz{font-family:'Noto Sans KR',sans-serif;font-size:1rem;color:var(--text);line-height:1.4;}
+    .convo-en{font-size:.82rem;color:var(--text-muted);line-height:1.4;}
+    .convo-listen{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:.9rem;align-self:center;}
+    .convo-listen:hover{color:var(--accent);}
+    .convo-tip{background:var(--surface2);border-left:3px solid var(--accent);padding:.6rem .9rem;border-radius:0 8px 8px 0;font-size:.82rem;color:var(--text-muted);margin-top:.8rem;}
+    .convo-tip strong{color:var(--accent);}
+
+    .quiz-wrap{max-width:700px;}
+    .quiz-modes{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .quiz-mode-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1.1rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text-muted);transition:all .15s;}
+    .quiz-mode-btn:hover,.quiz-mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(232,184,109,.08);}
+    .topic-grid{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0;}
+    .topic-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:.3rem .8rem;cursor:pointer;font-size:.8rem;color:var(--text-muted);transition:all .15s;display:flex;align-items:center;gap:.4rem;}
+    .topic-chip:hover{border-color:var(--accent2);}
+    .topic-chip.selected{border-color:var(--accent2);background:rgba(109,158,232,.1);color:var(--accent2);}
+    .chip-score{font-size:.7rem;background:var(--surface2);border-radius:10px;padding:1px 6px;}
+    .chip-score.good{background:rgba(109,204,158,.2);color:var(--green);}
+    .chip-score.mid{background:rgba(232,184,109,.2);color:var(--accent);}
+    .chip-score.bad{background:rgba(232,109,109,.2);color:var(--red);}
+    .quiz-progress{display:flex;gap:4px;margin-bottom:1.5rem;}
+    .quiz-pip{height:4px;flex:1;background:var(--border);border-radius:2px;transition:background .3s;}
+    .quiz-pip.done{background:var(--accent);}
+    .quiz-q{font-size:1.1rem;font-weight:600;margin-bottom:1.2rem;line-height:1.5;}
+    .quiz-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.2rem;}
+    .quiz-opt{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.75rem 1.1rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);text-align:left;transition:all .15s;}
+    .quiz-opt:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+    .quiz-opt.correct{border-color:var(--green);background:rgba(109,204,158,.1);color:var(--green);}
+    .quiz-opt.wrong{border-color:var(--red);background:rgba(232,109,109,.1);color:var(--red);}
+    .quiz-opt:disabled{cursor:not-allowed;}
+    .quiz-feedback{font-size:.95rem;min-height:1.5rem;margin-bottom:.8rem;font-weight:500;}
+    .quiz-feedback.ok{color:var(--green);}
+    .quiz-feedback.nope{color:var(--red);}
+    .stats-screen{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;}
+    .stats-screen h3{font-family:'Noto Sans KR',sans-serif;font-size:1.4rem;color:var(--accent);margin-bottom:.3rem;}
+    .stats-summary{display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap;}
+    .stat-pill{background:var(--surface2);border-radius:10px;padding:.6rem 1.1rem;text-align:center;flex:1;min-width:100px;}
+    .stat-pill .num{font-size:1.8rem;font-weight:700;font-family:'Space Mono',monospace;}
+    .stat-pill .lbl{font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;}
+    .stat-pill.green .num{color:var(--green);}
+    .stat-pill.red .num{color:var(--red);}
+    .stat-pill.gold .num{color:var(--accent);}
+    .topic-bars{margin:1.2rem 0;}
+    .topic-bar-row{display:grid;grid-template-columns:120px 1fr 40px;gap:.5rem;align-items:center;margin-bottom:.5rem;}
+    .topic-bar-label{font-size:.78rem;color:var(--text-muted);text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+    .topic-bar-track{background:var(--surface2);border-radius:4px;height:8px;overflow:hidden;}
+    .topic-bar-fill{height:100%;border-radius:4px;transition:width .5s ease;}
+    .topic-bar-pct{font-size:.72rem;color:var(--text-dim);text-align:right;}
+    .btn-primary{background:var(--accent);border:none;border-radius:8px;padding:.6rem 1.5rem;color:var(--bg);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:opacity .15s;}
+    .btn-primary:hover{opacity:.85;}
+    .btn-primary:disabled{opacity:.3;cursor:not-allowed;}
+    .btn-outline{background:transparent;border:1.5px solid var(--border);border-radius:8px;padding:.55rem 1.2rem;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer;transition:all .15s;}
+    .btn-outline:hover{border-color:var(--accent2);color:var(--accent2);}
+    .btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;}
+
+    .rec-manager{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;}
+    .rec-manager h3{font-family:'Space Mono',monospace;color:var(--accent2);font-size:.95rem;margin-bottom:1rem;}
+    .rec-list{display:flex;flex-direction:column;gap:.5rem;max-height:420px;overflow-y:auto;}
+    .rec-list::-webkit-scrollbar{width:4px;}
+    .rec-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+    .rec-item{display:flex;align-items:center;gap:.7rem;padding:.5rem .8rem;background:var(--surface2);border-radius:8px;font-size:.82rem;}
+    .rec-item-phrase{font-family:'Space Mono',monospace;color:var(--accent);flex:1;font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+    .storage-panel{position:fixed;bottom:20px;right:20px;background:var(--surface);padding:1rem;border-radius:12px;border:1px solid var(--border);z-index:100;max-width:280px;font-size:.8rem;}
+    .storage-panel h4{font-size:.85rem;margin-bottom:.5rem;color:var(--accent);}
+    .storage-buttons{display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap;}
+    .small-btn{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.2rem .5rem;color:var(--text-muted);cursor:pointer;font-size:.7rem;flex:1;text-align:center;}
+    .small-btn:hover{background:var(--accent2);color:var(--bg);}
+
+    .hangul-guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin:1rem 0;}
+    .hangul-guide-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;}
+    .hangul-guide-card .h-letter{font-family:'Noto Sans KR',sans-serif;font-size:2.2rem;font-weight:700;color:var(--accent);}
+    .hangul-guide-card .h-name{font-size:.8rem;color:var(--text-muted);margin:.2rem 0;}
+    .hangul-guide-card .h-desc{font-size:.75rem;color:var(--text-dim);}
+
+    .level-badge{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:.4rem;vertical-align:middle;}
+    .badge-a1{background:rgba(109,204,158,.2);color:var(--green);}
+    .badge-a2{background:rgba(232,184,109,.2);color:var(--accent);}
+    .badge-b1{background:rgba(109,158,232,.2);color:var(--accent2);}
+
+    @media(max-width:768px){
+      .hamburger{display:block;}
+      .top-search{width:130px;}
+      .sidebar{position:fixed;left:-100%;top:54px;height:calc(100vh - 54px);z-index:300;transition:left .25s ease;}
+      .sidebar.open{left:0;}
+      .main{padding:1.2rem;}
+      .card-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;}
+      .storage-panel{bottom:10px;right:10px;max-width:240px;padding:.8rem;}
+      .convo-line{grid-template-columns:auto 1fr;}
+      .convo-hz,.convo-listen{grid-column:1/-1;}
+    }
+  </style>
+</head>
+<body>
+<div class="top-bar">
+  <button class="hamburger" id="hamburger">☰</button>
+  <div class="logo">한국어 <span>Korean Study Hub</span></div>
+  <input type="text" class="top-search" placeholder="🔍 search vocab…" id="globalSearch">
+</div>
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Basics</div>
+      <div class="sidebar-item active" data-panel="numbers"><span class="icon">🔢</span>Numbers</div>
+      <div class="sidebar-item" data-panel="natural"><span class="icon">🌿</span>Natural Objects</div>
+      <div class="sidebar-item" data-panel="dates"><span class="icon">📅</span>Dates</div>
+      <div class="sidebar-item" data-panel="quantities"><span class="icon">📏</span>Quantities & Sizes</div>
+      <div class="sidebar-item" data-panel="directions"><span class="icon">🧭</span>Directions</div>
+      <div class="sidebar-item" data-panel="time"><span class="icon">⏰</span>Time</div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Beginners</div>
+      <div class="sidebar-item" data-panel="conversation_guide"><span class="icon">🗨️</span>Conversation Guide</div>
+      <div class="sidebar-item" data-panel="adjectives"><span class="icon">✨</span>Adjectives</div>
+      <div class="sidebar-item" data-panel="animals"><span class="icon">🐾</span>Animals</div>
+      <div class="sidebar-item" data-panel="basic_conversation"><span class="icon">💬</span>Basic Conversation</div>
+      <div class="sidebar-item" data-panel="body"><span class="icon">🫀</span>Body</div>
+      <div class="sidebar-item" data-panel="buildings"><span class="icon">🏢</span>Buildings</div>
+      <div class="sidebar-item" data-panel="colours"><span class="icon">🎨</span>Colours</div>
+      <div class="sidebar-item" data-panel="common_phrases"><span class="icon">🗣️</span>Common Phrases</div>
+      <div class="sidebar-item" data-panel="cooking"><span class="icon">🍳</span>Cooking</div>
+      <div class="sidebar-item" data-panel="countries"><span class="icon">🌍</span>Countries</div>
+      <div class="sidebar-item" data-panel="drinks"><span class="icon">🥤</span>Drinks</div>
+      <div class="sidebar-item" data-panel="eating_out"><span class="icon">🍜</span>Eating Out</div>
+      <div class="sidebar-item" data-panel="korean_restaurant"><span class="icon">🥢</span>Korean Restaurant</div>
+      <div class="sidebar-item" data-panel="emotions"><span class="icon">😊</span>Emotions</div>
+      <div class="sidebar-item" data-panel="family"><span class="icon">👨‍👩‍👧</span>Family</div>
+      <div class="sidebar-item" data-panel="greetings"><span class="icon">👋</span>Greetings</div>
+      <div class="sidebar-item" data-panel="health"><span class="icon">🏥</span>Health</div>
+      <div class="sidebar-item" data-panel="holidays"><span class="icon">🏖️</span>Holidays</div>
+      <div class="sidebar-item" data-panel="home"><span class="icon">🏠</span>Home</div>
+      <div class="sidebar-item" data-panel="machines"><span class="icon">⚙️</span>Machines</div>
+      <div class="sidebar-item" data-panel="motoring"><span class="icon">🚗</span>Motoring</div>
+      <div class="sidebar-item" data-panel="people"><span class="icon">👥</span>People</div>
+      <div class="sidebar-item" data-panel="places"><span class="icon">📍</span>Places</div>
+      <div class="sidebar-item" data-panel="professions"><span class="icon">💼</span>Professions</div>
+      <div class="sidebar-item" data-panel="pronouns"><span class="icon">🔤</span>Pronouns</div>
+      <div class="sidebar-item" data-panel="school"><span class="icon">🎒</span>School</div>
+      <div class="sidebar-item" data-panel="seasons"><span class="icon">🌸</span>Seasons</div>
+      <div class="sidebar-item" data-panel="special_occasions"><span class="icon">🎉</span>Special Occasions</div>
+      <div class="sidebar-item" data-panel="sport"><span class="icon">⚽</span>Sport</div>
+      <div class="sidebar-item" data-panel="kpop"><span class="icon">🎵</span>K-Pop & Culture</div>
+      <div class="sidebar-item" data-panel="slang"><span class="icon">😜</span>Slang & Internet</div>
+      <div class="sidebar-item" data-panel="verbs"><span class="icon">🏃</span>Verbs</div>
+      <div class="sidebar-item" data-panel="weather"><span class="icon">🌤️</span>Weather</div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Intermediate</div>
+      <div class="sidebar-item" data-panel="hangul_guide"><span class="icon">한</span>Hangul Guide</div>
+      <div class="sidebar-item" data-panel="intro_intermediate"><span class="icon">📖</span>Introduction</div>
+      <div class="sidebar-item" data-panel="grammar_particles"><span class="icon">💬</span>Grammar Particles</div>
+      <div class="sidebar-item" data-panel="honorifics"><span class="icon">🙇</span>Honorifics & Formality</div>
+      <div class="sidebar-item" data-panel="counters"><span class="icon">🔢</span>Counters & Classifiers</div>
+      <div class="sidebar-item" data-panel="this_that"><span class="icon">👉</span>"This" and "That"</div>
+      <div class="sidebar-item" data-panel="common_mistakes"><span class="icon">⚠️</span>Common Mistakes</div>
+      <div class="sidebar-item" data-panel="proverbs"><span class="icon">🀄</span>Korean Proverbs</div>
+      <div class="sidebar-item" data-panel="riddles"><span class="icon">🔮</span>Korean Riddles</div>
+      <div class="sidebar-item" data-panel="seoul_metro"><span class="icon">🚇</span>Seoul Metro</div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Practice</div>
+      <div class="sidebar-item" data-panel="quiz"><span class="icon">📝</span>Smart Quiz</div>
+      <div class="sidebar-item" data-panel="recordings_manager"><span class="icon">🎙️</span>My Recordings</div>
+    </div>
+  </nav>
+
+  <main class="main" id="mainContent">
+    <!-- HANGUL GUIDE -->
+    <div class="panel" id="panel-hangul_guide">
+      <div class="panel-header"><h2>한 Hangul — the Korean Alphabet</h2><p>Hangul has 14 basic consonants and 10 basic vowels. Unlike Chinese, it is fully phonetic!</p></div>
+      <div class="wide-card">
+        <h3>Why Hangul is Amazing</h3>
+        <p>Hangul was invented in 1443 by King Sejong the Great specifically so ordinary people could learn to read and write. Each symbol represents a sound, and letters are combined into syllable blocks. You can learn to read it in just a few hours!</p>
+      </div>
+      <div class="hangul-guide-grid" id="hangulGuideGrid"></div>
+    </div>
+
+    <!-- CONVERSATION GUIDE -->
+    <div class="panel" id="panel-conversation_guide">
+      <div class="panel-header"><h2>🗨️ Conversation Guide</h2><p>Real dialogues — how conversations flow in Korean</p></div>
+      <div id="convoGuideContent"></div>
+    </div>
+
+    <!-- BASICS -->
+    <div class="panel active" id="panel-numbers"><div class="panel-header"><h2>🔢 Numbers</h2><p>Korean has TWO number systems — native Korean and Sino-Korean (from Chinese). Both are essential!</p></div><div class="card-grid" id="grid-numbers"></div></div>
+    <div class="panel" id="panel-natural"><div class="panel-header"><h2>🌿 Natural Objects</h2></div><div class="card-grid" id="grid-natural"></div></div>
+    <div class="panel" id="panel-dates"><div class="panel-header"><h2>📅 Dates</h2></div><div class="card-grid" id="grid-dates"></div></div>
+    <div class="panel" id="panel-quantities"><div class="panel-header"><h2>📏 Quantities & Sizes</h2></div><div class="card-grid" id="grid-quantities"></div></div>
+    <div class="panel" id="panel-directions"><div class="panel-header"><h2>🧭 Directions</h2></div><div class="card-grid" id="grid-directions"></div></div>
+    <div class="panel" id="panel-time"><div class="panel-header"><h2>⏰ Time</h2></div><div class="card-grid" id="grid-time"></div></div>
+    <div class="panel" id="panel-adjectives"><div class="panel-header"><h2>✨ Adjectives</h2></div><div class="card-grid" id="grid-adjectives"></div></div>
+    <div class="panel" id="panel-animals"><div class="panel-header"><h2>🐾 Animals</h2></div><div class="card-grid" id="grid-animals"></div></div>
+    <div class="panel" id="panel-basic_conversation"><div class="panel-header"><h2>💬 Basic Conversation</h2></div><div class="card-grid" id="grid-basic_conversation"></div></div>
+    <div class="panel" id="panel-body"><div class="panel-header"><h2>🫀 Body</h2></div><div class="card-grid" id="grid-body"></div></div>
+    <div class="panel" id="panel-buildings"><div class="panel-header"><h2>🏢 Buildings</h2></div><div class="card-grid" id="grid-buildings"></div></div>
+    <div class="panel" id="panel-colours"><div class="panel-header"><h2>🎨 Colours</h2></div><div class="card-grid" id="grid-colours"></div></div>
+    <div class="panel" id="panel-common_phrases"><div class="panel-header"><h2>🗣️ Common Phrases</h2></div><div class="card-grid" id="grid-common_phrases"></div></div>
+    <div class="panel" id="panel-cooking"><div class="panel-header"><h2>🍳 Cooking</h2></div><div class="card-grid" id="grid-cooking"></div></div>
+    <div class="panel" id="panel-countries"><div class="panel-header"><h2>🌍 Countries</h2></div><div class="card-grid" id="grid-countries"></div></div>
+    <div class="panel" id="panel-drinks"><div class="panel-header"><h2>🥤 Drinks</h2></div><div class="card-grid" id="grid-drinks"></div></div>
+    <div class="panel" id="panel-eating_out"><div class="panel-header"><h2>🍜 Eating Out</h2></div><div class="card-grid" id="grid-eating_out"></div></div>
+    <div class="panel" id="panel-korean_restaurant"><div class="panel-header"><h2>🥢 Korean Restaurant Menu</h2><p>Full menu vocabulary — BBQ, soups, rice dishes, noodles, street food & desserts</p></div><div class="card-grid" id="grid-korean_restaurant"></div></div>
+    <div class="panel" id="panel-emotions"><div class="panel-header"><h2>😊 Emotions</h2></div><div class="card-grid" id="grid-emotions"></div></div>
+    <div class="panel" id="panel-family"><div class="panel-header"><h2>👨‍👩‍👧 Family</h2><p>Korean family terms differ depending on your own gender — pay attention to notes!</p></div><div class="card-grid" id="grid-family"></div></div>
+    <div class="panel" id="panel-greetings"><div class="panel-header"><h2>👋 Greetings</h2></div><div class="card-grid" id="grid-greetings"></div></div>
+    <div class="panel" id="panel-health"><div class="panel-header"><h2>🏥 Health</h2></div><div class="card-grid" id="grid-health"></div></div>
+    <div class="panel" id="panel-holidays"><div class="panel-header"><h2>🏖️ Holidays</h2></div><div class="card-grid" id="grid-holidays"></div></div>
+    <div class="panel" id="panel-home"><div class="panel-header"><h2>🏠 Home</h2></div><div class="card-grid" id="grid-home"></div></div>
+    <div class="panel" id="panel-machines"><div class="panel-header"><h2>⚙️ Machines</h2></div><div class="card-grid" id="grid-machines"></div></div>
+    <div class="panel" id="panel-motoring"><div class="panel-header"><h2>🚗 Motoring</h2></div><div class="card-grid" id="grid-motoring"></div></div>
+    <div class="panel" id="panel-people"><div class="panel-header"><h2>👥 People</h2></div><div class="card-grid" id="grid-people"></div></div>
+    <div class="panel" id="panel-places"><div class="panel-header"><h2>📍 Places</h2></div><div class="card-grid" id="grid-places"></div></div>
+    <div class="panel" id="panel-professions"><div class="panel-header"><h2>💼 Professions</h2></div><div class="card-grid" id="grid-professions"></div></div>
+    <div class="panel" id="panel-pronouns"><div class="panel-header"><h2>🔤 Pronouns</h2></div><div class="card-grid" id="grid-pronouns"></div></div>
+    <div class="panel" id="panel-school"><div class="panel-header"><h2>🎒 School</h2></div><div class="card-grid" id="grid-school"></div></div>
+    <div class="panel" id="panel-seasons"><div class="panel-header"><h2>🌸 Seasons</h2></div><div class="card-grid" id="grid-seasons"></div></div>
+    <div class="panel" id="panel-special_occasions"><div class="panel-header"><h2>🎉 Special Occasions</h2></div><div class="card-grid" id="grid-special_occasions"></div></div>
+    <div class="panel" id="panel-sport"><div class="panel-header"><h2>⚽ Sport</h2></div><div class="card-grid" id="grid-sport"></div></div>
+    <div class="panel" id="panel-kpop"><div class="panel-header"><h2>🎵 K-Pop & Korean Culture</h2><p>Vocabulary for talking about K-pop, K-dramas, and Korean pop culture</p></div><div class="card-grid" id="grid-kpop"></div></div>
+    <div class="panel" id="panel-slang"><div class="panel-header"><h2>😜 Slang & Internet Korean</h2><p>Modern Korean slang, abbreviations, and expressions used by young Koreans</p></div><div class="card-grid" id="grid-slang"></div></div>
+    <div class="panel" id="panel-verbs"><div class="panel-header"><h2>🏃 Verbs</h2><p>Korean verbs end in 다 (da) in dictionary form. The stem changes when conjugating.</p></div><div class="card-grid" id="grid-verbs"></div></div>
+    <div class="panel" id="panel-weather"><div class="panel-header"><h2>🌤️ Weather</h2></div><div class="card-grid" id="grid-weather"></div></div>
+
+    <!-- INTERMEDIATE -->
+    <div class="panel" id="panel-intro_intermediate">
+      <div class="panel-header"><h2>📖 Intermediate Korean</h2></div>
+      <div style="max-width:640px;">
+        <div class="wide-card"><h3>Key Grammar Concepts</h3><p>Korean is an <strong style="color:var(--accent)">SOV language</strong> (Subject-Object-Verb) — the verb always comes last. Particles attach to nouns to mark their role. Formality levels are essential — always know who you're speaking to!</p></div>
+        <div class="wide-card"><h3>Two Politeness Levels</h3><p><strong style="color:var(--accent)">Formal polite (합쇼체)</strong>: Use with strangers, elders, bosses. Verbs end in -ㅂ니다 / -습니다.<br><br><strong style="color:var(--accent2)">Informal polite (해요체)</strong>: Everyday speech with adults. Verbs end in -아요 / -어요.<br><br><strong style="color:var(--text-muted)">Casual (반말)</strong>: Close friends, younger people only. Dropping the 요.</p></div>
+      </div>
+    </div>
+    <div class="panel" id="panel-grammar_particles"><div class="panel-header"><h2>💬 Grammar Particles</h2><p>Particles attach to nouns and tell you the noun's role in the sentence</p></div><div id="grid-grammar_particles"></div></div>
+    <div class="panel" id="panel-honorifics"><div class="panel-header"><h2>🙇 Honorifics & Formality</h2></div><div id="grid-honorifics"></div></div>
+    <div class="panel" id="panel-counters"><div class="panel-header"><h2>🔢 Counters & Classifiers</h2></div><div class="card-grid" id="grid-counters"></div></div>
+    <div class="panel" id="panel-this_that"><div class="panel-header"><h2>👉 "This" and "That"</h2></div><div id="grid-this_that"></div></div>
+    <div class="panel" id="panel-common_mistakes"><div class="panel-header"><h2>⚠️ Common Mistakes</h2></div><div id="grid-common_mistakes"></div></div>
+    <div class="panel" id="panel-proverbs"><div class="panel-header"><h2>🀄 Korean Proverbs (속담)</h2></div><div id="grid-proverbs"></div></div>
+    <div class="panel" id="panel-riddles"><div class="panel-header"><h2>🔮 Korean Riddles (수수께끼)</h2></div><div id="grid-riddles"></div></div>
+    <div class="panel" id="panel-seoul_metro"><div class="panel-header"><h2>🚇 Seoul Metro</h2></div><div id="grid-seoul_metro"></div></div>
+
+    <!-- QUIZ -->
+    <div class="panel" id="panel-quiz"><div class="panel-header"><h2>📝 Smart Quiz</h2><p>Track progress by topic — target weak spots</p></div><div class="quiz-wrap" id="quizWrap"></div></div>
+
+    <!-- RECORDINGS MANAGER -->
+    <div class="panel" id="panel-recordings_manager">
+      <div class="panel-header"><h2>🎙️ My Recordings</h2><p>Manage all your saved voice recordings</p></div>
+      <div id="recManagerContent"></div>
+    </div>
+  </main>
+</div>
+
+<!-- RECORDING MODAL -->
+<div id="recordingModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.95);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:var(--surface);padding:2rem;border-radius:20px;max-width:500px;width:90%;border:1px solid var(--accent);">
+    <h3 style="color:var(--accent);margin-bottom:1rem;">🎙️ Record Your Voice</h3>
+    <p style="margin:1rem 0;">Phrase: <strong id="recordingPhrase" style="color:var(--accent2);font-family:'Noto Sans KR',sans-serif;font-size:1.1rem;"></strong></p>
+    <div id="recordingStatus" style="margin:1rem 0;padding:.5rem;background:var(--surface2);border-radius:8px;color:var(--text-muted);"></div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+      <button id="startRecordBtn" class="btn-primary">⏺ Start</button>
+      <button id="stopRecordBtn" class="btn-primary" style="display:none;background:var(--red);">⏹️ Stop</button>
+      <button id="playbackBtn" class="btn-primary" style="display:none;background:var(--accent2);">▶️ Playback</button>
+      <button id="saveRecordingBtn" class="btn-primary" style="display:none;">💾 Save</button>
+      <button id="deleteThisRecBtn" class="btn-primary" style="display:none;background:var(--red);">🗑️ Delete</button>
+      <button id="closeModalBtn" class="btn-primary" style="background:var(--text-dim);">Close</button>
+    </div>
+    <div id="existingRecNote" style="display:none;margin-top:.8rem;font-size:.8rem;color:var(--accent2);">✅ You have a recording for this phrase.</div>
+  </div>
+</div>
+
+<div class="storage-panel">
+  <h4>💾 Voice Recordings</h4>
+  <div class="storage-buttons">
+    <button id="exportAllBtn" class="small-btn">📥 Export</button>
+    <button id="importAllBtn" class="small-btn">📤 Import</button>
+    <button id="manageRecBtn" class="small-btn">⚙️ Manage</button>
+  </div>
+  <div id="storageInfo" style="font-size:.7rem;margin-top:.5rem;color:var(--text-muted);"></div>
+</div>
+
+<script>
+// ============================================================
+//  VOCABULARY  — rom=Romanisation  kr=Hangul  en=English
+// ============================================================
+const VOCAB = {
+  numbers:[
+    // SINO-KOREAN (일 이 삼...) — used for dates, phone numbers, money
+    {rom:"il",kr:"일",en:"One (Sino) — used for dates, money, phone"},
+    {rom:"i",kr:"이",en:"Two (Sino)"},
+    {rom:"sam",kr:"삼",en:"Three (Sino)"},
+    {rom:"sa",kr:"사",en:"Four (Sino)"},
+    {rom:"o",kr:"오",en:"Five (Sino)"},
+    {rom:"yuk",kr:"육",en:"Six (Sino)"},
+    {rom:"chil",kr:"칠",en:"Seven (Sino)"},
+    {rom:"pal",kr:"팔",en:"Eight (Sino)"},
+    {rom:"gu",kr:"구",en:"Nine (Sino)"},
+    {rom:"sip",kr:"십",en:"Ten (Sino)"},
+    {rom:"baek",kr:"백",en:"Hundred (Sino)"},
+    {rom:"cheon",kr:"천",en:"Thousand (Sino)"},
+    {rom:"man",kr:"만",en:"Ten thousand (Sino)"},
+    // NATIVE KOREAN (하나 둘 셋...) — used for counting objects, age
+    {rom:"hana",kr:"하나",en:"One (Native) — counting objects, age"},
+    {rom:"dul",kr:"둘",en:"Two (Native)"},
+    {rom:"set",kr:"셋",en:"Three (Native)"},
+    {rom:"net",kr:"넷",en:"Four (Native)"},
+    {rom:"dasut",kr:"다섯",en:"Five (Native)"},
+    {rom:"yeosut",kr:"여섯",en:"Six (Native)"},
+    {rom:"ilgop",kr:"일곱",en:"Seven (Native)"},
+    {rom:"yeodeol",kr:"여덟",en:"Eight (Native)"},
+    {rom:"ahop",kr:"아홉",en:"Nine (Native)"},
+    {rom:"yeol",kr:"열",en:"Ten (Native)"},
+    {rom:"seumul",kr:"스물",en:"Twenty (Native)"},
+    {rom:"seoreun",kr:"서른",en:"Thirty (Native)"},
+    {rom:"maheun",kr:"마흔",en:"Forty (Native)"},
+    {rom:"sip-il",kr:"십일",en:"Eleven (11 — Sino)"},
+    {rom:"i-sip",kr:"이십",en:"Twenty (20 — Sino)"},
+    {rom:"sam-sip",kr:"삼십",en:"Thirty (30 — Sino)"},
+    {rom:"o-baek",kr:"오백",en:"Five hundred (500)"},
+    {rom:"il-man",kr:"일만",en:"Ten thousand (10,000)"},
+    {rom:"baek-man",kr:"백만",en:"One million (1,000,000)"},
+    {rom:"il beon-jjae",kr:"일 번째",en:"First (ordinal)"},
+    {rom:"i beon-jjae",kr:"이 번째",en:"Second (ordinal)"},
+    {rom:"sam beon-jjae",kr:"삼 번째",en:"Third (ordinal)"},
+  ],
+  natural:[
+    {rom:"heuk",kr:"흙",en:"Earth / Soil"},
+    {rom:"mul",kr:"물",en:"Water"},
+    {rom:"bul",kr:"불",en:"Fire"},
+    {rom:"baem",kr:"바람",en:"Wind"},
+    {rom:"gureum",kr:"구름",en:"Cloud"},
+    {rom:"bi",kr:"비",en:"Rain"},
+    {rom:"nun",kr:"눈",en:"Snow"},
+    {rom:"haengnim",kr:"해",en:"Sun"},
+    {rom:"dal",kr:"달",en:"Moon"},
+    {rom:"byeol",kr:"별",en:"Star"},
+    {rom:"mujigae",kr:"무지개",en:"Rainbow"},
+    {rom:"san",kr:"산",en:"Mountain"},
+    {rom:"bada",kr:"바다",en:"Sea / Ocean"},
+    {rom:"gang",kr:"강",en:"River"},
+    {rom:"hosu",kr:"호수",en:"Lake"},
+    {rom:"sup",kr:"숲",en:"Forest"},
+    {rom:"sadaemak",kr:"사막",en:"Desert"},
+    {rom:"kkot",kr:"꽃",en:"Flower"},
+    {rom:"namu",kr:"나무",en:"Tree"},
+    {rom:"pul",kr:"풀",en:"Grass"},
+    {rom:"doek",kr:"돌",en:"Rock / Stone"},
+    {rom:"haebyon",kr:"해변",en:"Beach"},
+    {rom:"seom",kr:"섬",en:"Island"},
+    {rom:"pokpo",kr:"폭포",en:"Waterfall"},
+    {rom:"gongwon",kr:"공원",en:"Park"},
+    {rom:"hanul",kr:"하늘",en:"Sky"},
+    {rom:"gonggi",kr:"공기",en:"Air"},
+  ],
+  dates:[
+    {rom:"woryoil",kr:"월요일",en:"Monday"},
+    {rom:"hwayoil",kr:"화요일",en:"Tuesday"},
+    {rom:"suyoil",kr:"수요일",en:"Wednesday"},
+    {rom:"mogyoil",kr:"목요일",en:"Thursday"},
+    {rom:"geumyoil",kr:"금요일",en:"Friday"},
+    {rom:"toyoil",kr:"토요일",en:"Saturday"},
+    {rom:"iryoil",kr:"일요일",en:"Sunday"},
+    {rom:"il-wol",kr:"일월",en:"January"},
+    {rom:"i-wol",kr:"이월",en:"February"},
+    {rom:"sam-wol",kr:"삼월",en:"March"},
+    {rom:"sa-wol",kr:"사월",en:"April"},
+    {rom:"o-wol",kr:"오월",en:"May"},
+    {rom:"yu-wol",kr:"유월",en:"June"},
+    {rom:"chil-wol",kr:"칠월",en:"July"},
+    {rom:"pal-wol",kr:"팔월",en:"August"},
+    {rom:"gu-wol",kr:"구월",en:"September"},
+    {rom:"si-wol",kr:"시월",en:"October"},
+    {rom:"sibi-wol",kr:"십이월",en:"December"},
+    {rom:"sibil-wol",kr:"십일월",en:"November"},
+    {rom:"nyeon",kr:"년",en:"Year"},
+    {rom:"wol",kr:"월",en:"Month"},
+    {rom:"il",kr:"일",en:"Day"},
+    {rom:"geumnyeon",kr:"금년",en:"This year"},
+    {rom:"naeumnyeon",kr:"내년",en:"Next year"},
+    {rom:"jigeum",kr:"지금",en:"Now / Currently"},
+    {rom:"ojuje",kr:"오늘",en:"Today"},
+    {rom:"i beon-ju",kr:"이번 주",en:"This week"},
+    {rom:"da-eum ju",kr:"다음 주",en:"Next week"},
+  ],
+  quantities:[
+    {rom:"manheun",kr:"많은",en:"Many / Lots"},
+    {rom:"jegeun",kr:"적은",en:"Few / Little"},
+    {rom:"keun",kr:"큰",en:"Big / Large"},
+    {rom:"jageun",kr:"작은",en:"Small / Little"},
+    {rom:"gin",kr:"긴",en:"Long"},
+    {rom:"jjalgeun",kr:"짧은",en:"Short (length)"},
+    {rom:"nop-eun",kr:"높은",en:"High / Tall"},
+    {rom:"nateun",kr:"낮은",en:"Low"},
+    {rom:"gadeuk chan",kr:"가득 찬",en:"Full"},
+    {rom:"bin",kr:"빈",en:"Empty"},
+    {rom:"manhi",kr:"많이",en:"A lot"},
+    {rom:"jogeumyo",kr:"조금",en:"A little"},
+    {rom:"bam",kr:"반",en:"Half"},
+    {rom:"jeonbu",kr:"전부",en:"All / Everything"},
+    {rom:"gakgak",kr:"각각",en:"Each"},
+    {rom:"chungbunhan",kr:"충분한",en:"Enough"},
+    {rom:"bulchungbunhan",kr:"불충분한",en:"Not enough"},
+    {rom:"daeryak",kr:"대략",en:"Approximately / About"},
+    {rom:"moduoda",kr:"모두",en:"Everyone / All"},
+    {rom:"dasi",kr:"다시",en:"Again"},
+    {rom:"tto",kr:"또",en:"Also / Again"},
+    {rom:"jeuk",kr:"즉",en:"That is / i.e."},
+  ],
+  directions:[
+    {rom:"weon-jjok",kr:"왼쪽",en:"Left"},
+    {rom:"o-reun-jjok",kr:"오른쪽",en:"Right"},
+    {rom:"ap-jjok",kr:"앞쪽",en:"In front"},
+    {rom:"dwi-jjok",kr:"뒤쪽",en:"Behind"},
+    {rom:"wi-jjok",kr:"위쪽",en:"Above"},
+    {rom:"a-rae-jjok",kr:"아래쪽",en:"Below"},
+    {rom:"dong-jjok",kr:"동쪽",en:"East"},
+    {rom:"nam-jjok",kr:"남쪽",en:"South"},
+    {rom:"seo-jjok",kr:"서쪽",en:"West"},
+    {rom:"buk-jjok",kr:"북쪽",en:"North"},
+    {rom:"meori",kr:"멀리",en:"Far"},
+    {rom:"gakkai",kr:"가까이",en:"Near"},
+    {rom:"jik-jin",kr:"직진",en:"Go straight"},
+    {rom:"woen-jjok-euro dolda",kr:"왼쪽으로 돌다",en:"Turn left"},
+    {rom:"oreunjjok-euro dolda",kr:"오른쪽으로 돌다",en:"Turn right"},
+    {rom:"gyocharo",kr:"교차로",en:"Junction / Intersection"},
+    {rom:"doragaseo",kr:"돌아가세요",en:"Turn back"},
+    {rom:"georodo geonneoda",kr:"길을 건너다",en:"Cross the road"},
+    {rom:"wiro ollagada",kr:"위로 올라가다",en:"Go upstairs"},
+    {rom:"araeро naeryeogada",kr:"아래로 내려가다",en:"Go downstairs"},
+    {rom:"도착하다",kr:"도착하다",en:"Arrive"},
+  ],
+  time:[
+    {rom:"jigeum",kr:"지금",en:"Now"},
+    {rom:"oneul",kr:"오늘",en:"Today"},
+    {rom:"naeil",kr:"내일",en:"Tomorrow"},
+    {rom:"eoje",kr:"어제",en:"Yesterday"},
+    {rom:"geujeoke",kr:"그저께",en:"Day before yesterday"},
+    {rom:"achim",kr:"아침",en:"Morning"},
+    {rom:"jeonguo",kr:"정오",en:"Noon"},
+    {rom:"ohu",kr:"오후",en:"Afternoon"},
+    {rom:"jeonyeok",kr:"저녁",en:"Evening"},
+    {rom:"bam",kr:"밤",en:"Night"},
+    {rom:"myeot si-eyo?",kr:"몇 시예요?",en:"What time is it?"},
+    {rom:"han si",kr:"한 시",en:"One o'clock"},
+    {rom:"du si ban",kr:"두 시 반",en:"Two thirty"},
+    {rom:"se si sib-o bun",kr:"세 시 십오 분",en:"Three fifteen"},
+    {rom:"ban",kr:"반",en:"Half past"},
+    {rom:"ppalli",kr:"빨리",en:"Quickly / Hurry"},
+    {rom:"cheoncheonhi",kr:"천천히",en:"Slowly"},
+    {rom:"han si-gan",kr:"한 시간",en:"One hour"},
+    {rom:"il bun",kr:"일 분",en:"One minute"},
+    {rom:"il cho",kr:"일 초",en:"One second"},
+    {rom:"oneul bam",kr:"오늘 밤",en:"Tonight"},
+    {rom:"naeil bam",kr:"내일 밤",en:"Tomorrow night"},
+    {rom:"eojebam",kr:"어젯밤",en:"Last night"},
+    {rom:"choegeun",kr:"최근",en:"Recently"},
+    {rom:"ahop si",kr:"아홉 시",en:"Nine o'clock"},
+  ],
+  adjectives:[
+    {rom:"yeppun",kr:"예쁜",en:"Beautiful / Pretty"},
+    {rom:"mot-saenggin",kr:"못생긴",en:"Ugly"},
+    {rom:"haengbok-han",kr:"행복한",en:"Happy"},
+    {rom:"seulpeun",kr:"슬픈",en:"Sad"},
+    {rom:"bissan",kr:"비싼",en:"Expensive"},
+    {rom:"ssan",kr:"싼",en:"Cheap"},
+    {rom:"sae",kr:"새",en:"New"},
+    {rom:"oraedoen",kr:"오래된",en:"Old (things)"},
+    {rom:"geureun",kr:"게으른",en:"Lazy"},
+    {rom:"budireonhan",kr:"부디런한",en:"Hard-working"},
+    {rom:"mugeoun",kr:"무거운",en:"Heavy"},
+    {rom:"gabyeoun",kr:"가벼운",en:"Light (weight)"},
+    {rom:"deopeun",kr:"더운",en:"Hot"},
+    {rom:"chagaun",kr:"차가운",en:"Cold"},
+    {rom:"ttaddeuthan",kr:"따뜻한",en:"Warm"},
+    {rom:"neobeun",kr:"넓은",en:"Wide"},
+    {rom:"jop-eun",kr:"좁은",en:"Narrow"},
+    {rom:"gaekkeuthan",kr:"깨끗한",en:"Clean"},
+    {rom:"bbareun",kr:"빠른",en:"Fast"},
+    {rom:"neurin",kr:"느린",en:"Slow"},
+    {rom:"joheun",kr:"좋은",en:"Good"},
+    {rom:"napeun",kr:"나쁜",en:"Bad"},
+    {rom:"majneun",kr:"맞는",en:"Correct"},
+    {rom:"teulllin",kr:"틀린",en:"Wrong"},
+    {rom:"balggeun",kr:"밝은",en:"Bright"},
+    {rom:"eo-dum-eun",kr:"어두운",en:"Dark"},
+    {rom:"masit-neun",kr:"맛있는",en:"Delicious / Tasty"},
+    {rom:"maseo-neun",kr:"맛없는",en:"Doesn't taste good"},
+    {rom:"maewun",kr:"매운",en:"Spicy"},
+    {rom:"dan",kr:"단",en:"Sweet"},
+    {rom:"jjapseullm",kr:"짠",en:"Salty"},
+    {rom:"ssin",kr:"신",en:"Sour"},
+    {rom:"sseuneun",kr:"쓴",en:"Bitter"},
+    {rom:"eoryeo-un",kr:"어려운",en:"Difficult"},
+    {rom:"swi-un",kr:"쉬운",en:"Easy"},
+    {rom:"jae-misi-tneun",kr:"재미있는",en:"Fun"},
+    {rom:"우스운",kr:"우스운",en:"Funny"},
+  ],
+  animals:[
+    {rom:"gae",kr:"개",en:"Dog"},
+    {rom:"goyang-i",kr:"고양이",en:"Cat"},
+    {rom:"mul-gogi",kr:"물고기",en:"Fish"},
+    {rom:"dak",kr:"닭",en:"Chicken"},
+    {rom:"so",kr:"소",en:"Cow"},
+    {rom:"dwaeji",kr:"돼지",en:"Pig"},
+    {rom:"yang",kr:"양",en:"Sheep"},
+    {rom:"mal",kr:"말",en:"Horse"},
+    {rom:"toki",kr:"토끼",en:"Rabbit"},
+    {rom:"horang-i",kr:"호랑이",en:"Tiger"},
+    {rom:"saja",kr:"사자",en:"Lion"},
+    {rom:"kokkiri",kr:"코끼리",en:"Elephant"},
+    {rom:"얼룩말",kr:"얼룩말",en:"Zebra"},
+    {rom:"펭귄",kr:"펭귄",en:"Penguin"},
+    {rom:"ge",kr:"게",en:"Crab"},
+    {rom:"saeu",kr:"새우",en:"Prawn / Shrimp"},
+    {rom:"bam",kr:"뱀",en:"Snake"},
+    {rom:"georuk-i",kr:"거북이",en:"Tortoise"},
+    {rom:"wonsung-i",kr:"원숭이",en:"Monkey"},
+    {rom:"ori",kr:"오리",en:"Duck"},
+    {rom:"go-rae",kr:"고래",en:"Whale"},
+    {rom:"dolgo-rae",kr:"돌고래",en:"Dolphin"},
+    {rom:"sae",kr:"새",en:"Bird (general)"},
+    {rom:"gom",kr:"곰",en:"Bear"},
+    {rom:"yeou",kr:"여우",en:"Fox"},
+    {rom:"neuk-dae",kr:"늑대",en:"Wolf"},
+    {rom:"goseumsando-chi",kr:"고슴도치",en:"Hedgehog"},
+  ],
+  basic_conversation:[
+    {rom:"annyeonghaseyo",kr:"안녕하세요",en:"Hello (formal)"},
+    {rom:"jal jinae-seo-yo?",kr:"잘 지내세요?",en:"How are you? (formal)"},
+    {rom:"jal jinaego isseoyo, gamsahamnida",kr:"잘 지내고 있어요, 감사합니다",en:"I'm doing well, thank you"},
+    {rom:"ireumi mwoeyo?",kr:"이름이 뭐예요?",en:"What is your name?"},
+    {rom:"je ireumeum ___-ieyo",kr:"제 이름은 ___이에요",en:"My name is ___"},
+    {rom:"eodi-seo o-syeoss-eo-yo?",kr:"어디서 오셨어요?",en:"Where are you from?"},
+    {rom:"hangugeo jogeumyo hal su isseoyo",kr:"한국어 조금요 할 수 있어요",en:"I can speak a little Korean"},
+    {rom:"cheoncheonhi malhaejusil su isseoyo?",kr:"천천히 말해주실 수 있어요?",en:"Can you speak more slowly?"},
+    {rom:"ihaega andwaeyo",kr:"이해가 안돼요",en:"I don't understand"},
+    {rom:"jamkkanyo",kr:"잠깐요",en:"Wait a moment"},
+    {rom:"hwajangsil eodi-eyo?",kr:"화장실 어디에요?",en:"Where is the toilet?"},
+    {rom:"eol-ma-eyo?",kr:"얼마예요?",en:"How much?"},
+    {rom:"jeongmal gamsahamnida",kr:"정말 감사합니다",en:"Thank you very much"},
+    {rom:"ne, massoyo",kr:"네, 맞아요",en:"Yes, that's right"},
+    {rom:"mollayo",kr:"몰라요",en:"I don't know"},
+    {rom:"gwaenchanayo",kr:"괜찮아요",en:"It's fine / Never mind"},
+    {rom:"yeong-eolo hal su isseo-yo?",kr:"영어로 할 수 있어요?",en:"Can you speak English?"},
+    {rom:"jogeumyo hal su isseoyo",kr:"조금요 할 수 있어요",en:"I can a little"},
+    {rom:"oneul eotteoseyo?",kr:"오늘 어떠세요?",en:"How are you today?"},
+    {rom:"man-na-seo ban-ga-woyo",kr:"만나서 반가워요",en:"Nice to meet you"},
+  ],
+  body:[
+    {rom:"meori",kr:"머리",en:"Head"},
+    {rom:"eolgul",kr:"얼굴",en:"Face"},
+    {rom:"nun",kr:"눈",en:"Eyes"},
+    {rom:"gwi",kr:"귀",en:"Ears"},
+    {rom:"ko",kr:"코",en:"Nose"},
+    {rom:"ip",kr:"입",en:"Mouth"},
+    {rom:"i",kr:"이",en:"Teeth"},
+    {rom:"son",kr:"손",en:"Hand"},
+    {rom:"bal",kr:"발",en:"Foot / Feet"},
+    {rom:"deung",kr:"등",en:"Back"},
+    {rom:"bae",kr:"배",en:"Belly / Stomach"},
+    {rom:"simjang",kr:"심장",en:"Heart"},
+    {rom:"mom",kr:"몸",en:"Body"},
+    {rom:"mok",kr:"목",en:"Neck"},
+    {rom:"heori",kr:"허리",en:"Waist"},
+    {rom:"eo-kkae",kr:"어깨",en:"Shoulder"},
+    {rom:"son-ga-rak",kr:"손가락",en:"Finger"},
+    {rom:"mu-reup",kr:"무릎",en:"Knee"},
+    {rom:"ip-sul",kr:"입술",en:"Lips"},
+    {rom:"ppyam",kr:"뺨",en:"Cheek"},
+    {rom:"meori-ka-rak",kr:"머리카락",en:"Hair (head)"},
+    {rom:"pi-bu",kr:"피부",en:"Skin"},
+    {rom:"bbyo",kr:"뼈",en:"Bone"},
+    {rom:"pi",kr:"피",en:"Blood"},
+    {rom:"pa-yi",kr:"파이",en:"Lungs"},
+    {rom:"gan",kr:"간",en:"Liver"},
+    {rom:"pal-kkum-chi",kr:"팔꿈치",en:"Elbow"},
+    {rom:"bbal-mok",kr:"발목",en:"Ankle"},
+  ],
+  buildings:[
+    {rom:"jip",kr:"집",en:"House"},
+    {rom:"a-pa-teu",kr:"아파트",en:"Apartment"},
+    {rom:"gong-jang",kr:"공장",en:"Factory"},
+    {rom:"hak-gyo",kr:"학교",en:"School"},
+    {rom:"byeong-won",kr:"병원",en:"Hospital"},
+    {rom:"eun-haeng",kr:"은행",en:"Bank"},
+    {rom:"ga-ge",kr:"가게",en:"Shop"},
+    {rom:"ho-tel",kr:"호텔",en:"Hotel"},
+    {rom:"sikdang",kr:"식당",en:"Restaurant"},
+    {rom:"beoseu jeongnyujang",kr:"버스 정류장",en:"Bus stop"},
+    {rom:"jihacheol yeok",kr:"지하철 역",en:"Subway station"},
+    {rom:"gong-hang",kr:"공항",en:"Airport"},
+    {rom:"hang-gu",kr:"항구",en:"Harbour / Port"},
+    {rom:"gyeong-chal-seo",kr:"경찰서",en:"Police station"},
+    {rom:"ucheguk",kr:"우체국",en:"Post office"},
+    {rom:"doseo-gwan",kr:"도서관",en:"Library"},
+    {rom:"gong-won",kr:"공원",en:"Park"},
+    {rom:"bakmulee-gwan",kr:"박물관",en:"Museum"},
+    {rom:"baek-hwa-jeom",kr:"백화점",en:"Department store"},
+    {rom:"yeong-hwa-gwan",kr:"영화관",en:"Cinema"},
+  ],
+  colours:[
+    {rom:"bbal-gan-saek",kr:"빨간색",en:"Red"},
+    {rom:"pa-ran-saek",kr:"파란색",en:"Blue"},
+    {rom:"cho-rok-saek",kr:"초록색",en:"Green"},
+    {rom:"no-ran-saek",kr:"노란색",en:"Yellow"},
+    {rom:"geom-eun-saek",kr:"검은색",en:"Black"},
+    {rom:"han-saek",kr:"흰색",en:"White"},
+    {rom:"hoe-saek",kr:"회색",en:"Grey"},
+    {rom:"ju-hwang-saek",kr:"주황색",en:"Orange"},
+    {rom:"bun-hong-saek",kr:"분홍색",en:"Pink"},
+    {rom:"bo-ra-saek",kr:"보라색",en:"Purple"},
+    {rom:"gal-saek",kr:"갈색",en:"Brown"},
+    {rom:"geum-saek",kr:"금색",en:"Gold"},
+    {rom:"eun-saek",kr:"은색",en:"Silver"},
+    {rom:"ha-neul-saek",kr:"하늘색",en:"Sky blue"},
+    {rom:"jin-cho-rok",kr:"진초록",en:"Dark green"},
+    {rom:"jin-bbal-gan",kr:"진빨간",en:"Dark red / Crimson"},
+    {rom:"yeon-bbo-ra",kr:"연보라",en:"Light purple / Lavender"},
+    {rom:"ttu-myeong-han",kr:"투명한",en:"Transparent / Clear"},
+    {rom:"mul-saek",kr:"물색",en:"Aqua / Water colour"},
+    {rom:"be-i-ji",kr:"베이지",en:"Beige / Cream"},
+  ],
+  common_phrases:[
+    {rom:"sillyehamneunda",kr:"실례합니다",en:"Excuse me (formal)"},
+    {rom:"gamsahamnida",kr:"감사합니다",en:"Thank you (formal)"},
+    {rom:"gamsahaeyo",kr:"감사해요",en:"Thank you (informal polite)"},
+    {rom:"cheonmaneyo",kr:"천만에요",en:"You're welcome"},
+    {rom:"joesong-hamnida",kr:"죄송합니다",en:"I'm sorry (formal)"},
+    {rom:"mi-an-hae-yo",kr:"미안해요",en:"Sorry (informal)"},
+    {rom:"gwaenchanayo",kr:"괜찮아요",en:"It's OK / No problem"},
+    {rom:"ne",kr:"네",en:"Yes"},
+    {rom:"a-ni-yo",kr:"아니요",en:"No"},
+    {rom:"isseoyo",kr:"있어요",en:"There is / I have"},
+    {rom:"eops-eoyo",kr:"없어요",en:"There isn't / I don't have"},
+    {rom:"jamkkanyo",kr:"잠깐요",en:"One moment"},
+    {rom:"jeong-mal-yo?",kr:"정말요?",en:"Really?"},
+    {rom:"neomu joahyo!",kr:"너무 좋아요!",en:"That's great!"},
+    {rom:"hal su isseoyo?",kr:"할 수 있어요?",en:"Can I / May I?"},
+    {rom:"dowa-juseyo!",kr:"도와주세요!",en:"Help! / Please help me!"},
+    {rom:"modu gwaenchanayo",kr:"모두 괜찮아요",en:"Never mind / It's all fine"},
+    {rom:"biakki jeonghaegi",kr:"바로 그거예요",en:"Exactly"},
+    {rom:"geureokka-yo?",kr:"그렇구요?",en:"Is that so? / Oh, really?"},
+    {rom:"algesso-yo",kr:"알겠어요",en:"I understand / Got it"},
+    {rom:"mollayo",kr:"몰라요",en:"I don't know"},
+    {rom:"gachi hae-yo",kr:"같이 해요",en:"Let's do it together"},
+    {rom:"honja",kr:"혼자",en:"Alone / By oneself"},
+  ],
+  cooking:[
+    {rom:"bap-eul jit-da",kr:"밥을 짓다",en:"Cook rice"},
+    {rom:"bokkeum",kr:"볶음",en:"Stir fry"},
+    {rom:"jjim",kr:"찜",en:"Steam / Steamed dish"},
+    {rom:"gui",kr:"구이",en:"Grill / Roast"},
+    {rom:"guk",kr:"국",en:"Soup"},
+    {rom:"jjigae",kr:"찌개",en:"Stew (Korean style)"},
+    {rom:"sogeum",kr:"소금",en:"Salt"},
+    {rom:"seoltang",kr:"설탕",en:"Sugar"},
+    {rom:"gireum",kr:"기름",en:"Oil"},
+    {rom:"ganjang",kr:"간장",en:"Soy sauce"},
+    {rom:"go-chu",kr:"고추",en:"Chilli"},
+    {rom:"manul",kr:"마늘",en:"Garlic"},
+    {rom:"saenggang",kr:"생강",en:"Ginger"},
+    {rom:"bap",kr:"밥",en:"Cooked rice"},
+    {rom:"guksu",kr:"국수",en:"Noodles"},
+    {rom:"ramyeon",kr:"라면",en:"Ramen / Instant noodles"},
+    {rom:"gochujang",kr:"고추장",en:"Red pepper paste"},
+    {rom:"doenjang",kr:"된장",en:"Fermented soybean paste"},
+    {rom:"chamgireum",kr:"참기름",en:"Sesame oil"},
+    {rom:"sikkcho",kr:"식초",en:"Vinegar"},
+    {rom:"gim",kr:"김",en:"Dried seaweed / Nori"},
+    {rom:"ppa-ye",kr:"파",en:"Spring onion"},
+    {rom:"myeolchi-aek-jeot",kr:"멸치액젓",en:"Fish sauce (Korean)"},
+    {rom:"milgaru",kr:"밀가루",en:"Flour"},
+    {rom:"gyeran",kr:"계란",en:"Egg"},
+  ],
+  countries:[
+    {rom:"hanguk",kr:"한국",en:"South Korea"},
+    {rom:"bukhan",kr:"북한",en:"North Korea"},
+    {rom:"jungguk",kr:"중국",en:"China"},
+    {rom:"ilbon",kr:"일본",en:"Japan"},
+    {rom:"yeong-guk",kr:"영국",en:"United Kingdom"},
+    {rom:"miguk",kr:"미국",en:"United States"},
+    {rom:"peullangseu",kr:"프랑스",en:"France"},
+    {rom:"dogilseu",kr:"독일",en:"Germany"},
+    {rom:"hoseuteurei-lyeo",kr:"호주",en:"Australia"},
+    {rom:"kaenada",kr:"캐나다",en:"Canada"},
+    {rom:"indo",kr:"인도",en:"India"},
+    {rom:"seu-pein",kr:"스페인",en:"Spain"},
+    {rom:"itallia",kr:"이탈리아",en:"Italy"},
+    {rom:"beulajil",kr:"브라질",en:"Brazil"},
+    {rom:"taiwan",kr:"대만",en:"Taiwan"},
+    {rom:"singapol",kr:"싱가포르",en:"Singapore"},
+    {rom:"melsi-ko",kr:"멕시코",en:"Mexico"},
+    {rom:"pillipin",kr:"필리핀",en:"Philippines"},
+    {rom:"taeiguk",kr:"태국",en:"Thailand"},
+    {rom:"beteunam",kr:"베트남",en:"Vietnam"},
+    {rom:"aillaend",kr:"아일랜드",en:"Ireland"},
+    {rom:"namafrika",kr:"남아프리카",en:"South Africa"},
+  ],
+  drinks:[
+    {rom:"mul",kr:"물",en:"Water"},
+    {rom:"cha",kr:"차",en:"Tea"},
+    {rom:"keopi",kr:"커피",en:"Coffee"},
+    {rom:"uyu",kr:"우유",en:"Milk"},
+    {rom:"gwail jusu",kr:"과일 주스",en:"Fruit juice"},
+    {rom:"maekju",kr:"맥주",en:"Beer"},
+    {rom:"so-ju",kr:"소주",en:"Soju (Korean rice spirit)"},
+    {rom:"makgeolli",kr:"막걸리",en:"Makgeolli (rice wine)"},
+    {rom:"boksung-a jusu",kr:"복숭아 주스",en:"Peach juice"},
+    {rom:"boba",kr:"버블티",en:"Bubble tea"},
+    {rom:"cola",kr:"콜라",en:"Cola"},
+    {rom:"saideu",kr:"사이다",en:"Korean lemon soda (Cider)"},
+    {rom:"ureumul",kr:"얼음물",en:"Ice water"},
+    {rom:"nokcha",kr:"녹차",en:"Green tea"},
+    {rom:"bori-cha",kr:"보리차",en:"Barley tea (popular in Korea)"},
+    {rom:"hyeonsam-cha",kr:"현삼차",en:"Ginseng tea"},
+    {rom:"sujeonggwa",kr:"수정과",en:"Cinnamon ginger punch"},
+    {rom:"sikhye",kr:"식혜",en:"Sweet rice punch"},
+    {rom:"saekgwa jusu",kr:"사과 주스",en:"Apple juice"},
+    {rom:"suak jusu",kr:"수박 주스",en:"Watermelon juice"},
+    {rom:"insamcha",kr:"인삼차",en:"Ginseng tea"},
+  ],
+  eating_out:[
+    {rom:"ja-ri iss-eo-yo?",kr:"자리 있어요?",en:"Do you have a table?"},
+    {rom:"du myeong-i-yo",kr:"두 명이요",en:"Table for two"},
+    {rom:"se myeong-i-yo",kr:"세 명이요",en:"Table for three"},
+    {rom:"me-nyu ju-se-yo",kr:"메뉴 주세요",en:"Menu please"},
+    {rom:"ju-mun-hal-ge-yo",kr:"주문할게요",en:"I'd like to order"},
+    {rom:"___ju-se-yo",kr:"___주세요",en:"Please give me ___ / I'd like ___"},
+    {rom:"gye-san-seo ju-se-yo",kr:"계산서 주세요",en:"Check please"},
+    {rom:"mas-i-ss-eo-yo",kr:"맛있어요",en:"Delicious"},
+    {rom:"bae-go-pa-yo",kr:"배고파요",en:"I'm hungry"},
+    {rom:"a-chim-sik-sa",kr:"아침식사",en:"Breakfast"},
+    {rom:"jeomsinmeal",kr:"점심",en:"Lunch"},
+    {rom:"jeonyeong-meal",kr:"저녁",en:"Dinner"},
+    {rom:"po-jang-mae-o-yo",kr:"포장돼요?",en:"Can I get takeaway?"},
+    {rom:"매워요",kr:"매워요",en:"It's spicy"},
+    {rom:"매운 거 못 먹어요",kr:"매운 거 못 먹어요",en:"I can't eat spicy food"},
+    {rom:"yeachesi-kdo isseoyo?",kr:"채식도 있어요?",en:"Do you have vegetarian?"},
+    {rom:"bap deo ju-se-yo",kr:"밥 더 주세요",en:"More rice please"},
+    {rom:"jeo-neun ___eul anmeogeyo",kr:"저는 ___을 안 먹어요",en:"I don't eat ___"},
+    {rom:"bae bul-eo-yo",kr:"배 불러요",en:"I'm full"},
+  ],
+  korean_restaurant:[
+    // BBQ
+    {rom:"sam-gyeop-sal",kr:"삼겹살",en:"Pork belly BBQ (K-BBQ classic)"},
+    {rom:"galbi",kr:"갈비",en:"Beef short ribs BBQ"},
+    {rom:"bulgogi",kr:"불고기",en:"Marinated beef (bulgogi)"},
+    {rom:"dak-galbi",kr:"닭갈비",en:"Spicy stir-fried chicken"},
+    {rom:"bossam",kr:"보쌈",en:"Boiled pork with kimchi wraps"},
+    {rom:"jeyuk-bokkeum",kr:"제육볶음",en:"Spicy pork stir-fry"},
+    // SOUPS & STEWS
+    {rom:"kimchi-jjigae",kr:"김치찌개",en:"Kimchi stew"},
+    {rom:"doenjang-jjigae",kr:"된장찌개",en:"Fermented soybean paste stew"},
+    {rom:"sundubu-jjigae",kr:"순두부찌개",en:"Soft tofu stew (spicy)"},
+    {rom:"galbi-tang",kr:"갈비탕",en:"Short rib soup"},
+    {rom:"seolleongtang",kr:"설렁탕",en:"Ox bone soup (milky white)"},
+    {rom:"samgyetang",kr:"삼계탕",en:"Whole chicken and ginseng soup"},
+    {rom:"haemul-tang",kr:"해물탕",en:"Seafood stew"},
+    {rom:"budae-jjigae",kr:"부대찌개",en:"Army base stew (fusion stew)"},
+    // RICE DISHES
+    {rom:"bibimbap",kr:"비빔밥",en:"Mixed rice bowl with veg & egg"},
+    {rom:"dolsot-bibimbap",kr:"돌솥비빔밥",en:"Stone pot bibimbap"},
+    {rom:"bokkeum-bap",kr:"볶음밥",en:"Fried rice"},
+    {rom:"gimbap",kr:"김밥",en:"Korean rice rolls (like sushi)"},
+    {rom:"juk",kr:"죽",en:"Korean rice porridge"},
+    {rom:"yuk-hoe-bap",kr:"육회밥",en:"Raw beef rice bowl"},
+    // NOODLES
+    {rom:"naengmyeon",kr:"냉면",en:"Cold buckwheat noodles"},
+    {rom:"ramyeon",kr:"라면",en:"Ramen / Instant noodles"},
+    {rom:"japchae",kr:"잡채",en:"Glass noodles with vegetables"},
+    {rom:"jjajangmyeon",kr:"짜장면",en:"Black bean paste noodles"},
+    {rom:"jjamppong",kr:"짬뽕",en:"Spicy seafood noodle soup"},
+    {rom:"kalguksu",kr:"칼국수",en:"Knife-cut noodle soup"},
+    // CHICKEN
+    {rom:"yangnyeom-chikin",kr:"양념치킨",en:"Korean fried chicken (spicy sauce)"},
+    {rom:"ganjang-chikin",kr:"간장치킨",en:"Soy garlic fried chicken"},
+    {rom:"tongdak",kr:"통닭",en:"Whole fried chicken"},
+    // SEAFOOD
+    {rom:"haemul-pajeon",kr:"해물파전",en:"Seafood spring onion pancake"},
+    {rom:"nakji-bokkeum",kr:"낙지볶음",en:"Spicy octopus stir-fry"},
+    {rom:"ganjang-gejang",kr:"간장게장",en:"Soy marinated raw crab"},
+    {rom:"agujjim",kr:"아귀찜",en:"Steamed monkfish with vegetables"},
+    // SIDES & SNACKS
+    {rom:"kimchi",kr:"김치",en:"Fermented spicy cabbage"},
+    {rom:"pajeon",kr:"파전",en:"Spring onion pancake"},
+    {rom:"bindaetteok",kr:"빈대떡",en:"Mung bean pancake"},
+    {rom:"tteokbokki",kr:"떡볶이",en:"Spicy rice cakes"},
+    {rom:"eomuk",kr:"어묵",en:"Fish cake (street food)"},
+    {rom:"odeng",kr:"오뎅",en:"Fish cake skewer (street food)"},
+    {rom:"kimbap",kr:"김밥",en:"Seaweed rice rolls"},
+    {rom:"mandu",kr:"만두",en:"Korean dumplings"},
+    // DESSERTS
+    {rom:"pat-bingsu",kr:"팥빙수",en:"Shaved ice with red bean"},
+    {rom:"hotteok",kr:"호떡",en:"Sweet pancake (street food)"},
+    {rom:"dalgona",kr:"달고나",en:"Dalgona toffee (viral candy)"},
+    {rom:"yakgwa",kr:"약과",en:"Traditional honey pastry"},
+    {rom:"sikhye",kr:"식혜",en:"Sweet rice drink dessert"},
+    // RESTAURANT PHRASES
+    {rom:"yeogi-yo!",kr:"여기요!",en:"Excuse me! (to get waiter)"},
+    {rom:"jalmugessumnida",kr:"잘 먹겠습니다",en:"Thank you for the food (before eating)"},
+    {rom:"jal meogeossseumnida",kr:"잘 먹었습니다",en:"Thank you for the meal (after)"},
+    {rom:"gogi-neun anmeogeoyo",kr:"고기는 안 먹어요",en:"I don't eat meat"},
+    {rom:"allergy isseoyo",kr:"알레르기 있어요",en:"I have an allergy"},
+    {rom:"gye-san-seo",kr:"계산서",en:"The bill"},
+    {rom:"gachi nael-ge-yo",kr:"같이 낼게요",en:"Let's split the bill"},
+  ],
+  emotions:[
+    {rom:"haengbok-haeyo",kr:"행복해요",en:"Happy"},
+    {rom:"seulpeo-yo",kr:"슬퍼요",en:"Sad"},
+    {rom:"hwa-na-yo",kr:"화나요",en:"Angry"},
+    {rom:"mu-seo-wo-yo",kr:"무서워요",en:"Scared / Afraid"},
+    {rom:"nol-la-yo",kr:"놀라요",en:"Shocked / Surprised"},
+    {rom:"sa-rang-hae-yo",kr:"사랑해요",en:"Love (you)"},
+    {rom:"si-reo-yo",kr:"싫어요",en:"Hate / Dislike"},
+    {rom:"oe-ro-wo-yo",kr:"외로워요",en:"Lonely"},
+    {rom:"pi-gon-hae-yo",kr:"피곤해요",en:"Tired"},
+    {rom:"heung-bun-hae-yo",kr:"흥분해요",en:"Excited"},
+    {rom:"gam-dong-hae-yo",kr:"감동해요",en:"Moved / Touched"},
+    {rom:"bu-kku-leo-wo-yo",kr:"부끄러워요",en:"Embarrassed"},
+    {rom:"neo-mu jo-a-yo",kr:"너무 좋아요",en:"I really like / I love (it)"},
+    {rom:"gung-geum-hae-yo",kr:"궁금해요",en:"Curious"},
+    {rom:"geo-jeong-dwo-yo",kr:"걱정돼요",en:"Worried"},
+    {rom:"pyen-an-hae-yo",kr:"편안해요",en:"Relaxed / Comfortable"},
+    {rom:"him-deul-eo-yo",kr:"힘들어요",en:"It's tough / exhausted"},
+    {rom:"gwaen-chan-a-yo",kr:"괜찮아요",en:"I'm OK / It's fine"},
+    {rom:"neo-mu boo-keo-wo-yo",kr:"너무 부끄러워요",en:"Very embarrassed"},
+  ],
+  family:[
+    {rom:"a-beo-ji",kr:"아버지",en:"Father (formal)"},
+    {rom:"a-bba",kr:"아빠",en:"Dad (informal)"},
+    {rom:"eo-meo-ni",kr:"어머니",en:"Mother (formal)"},
+    {rom:"eomma",kr:"엄마",en:"Mum (informal)"},
+    {rom:"hyeong",kr:"형",en:"Older brother (male speaker)"},
+    {rom:"oppa",kr:"오빠",en:"Older brother (female speaker)"},
+    {rom:"nuna",kr:"누나",en:"Older sister (male speaker)"},
+    {rom:"eonni",kr:"언니",en:"Older sister (female speaker)"},
+    {rom:"namdongsaeng",kr:"남동생",en:"Younger brother"},
+    {rom:"yeodongsaeng",kr:"여동생",en:"Younger sister"},
+    {rom:"hal-a-beo-ji",kr:"할아버지",en:"Grandfather (paternal)"},
+    {rom:"hal-meo-ni",kr:"할머니",en:"Grandmother (paternal)"},
+    {rom:"oe-hal-a-beo-ji",kr:"외할아버지",en:"Grandfather (maternal)"},
+    {rom:"oe-hal-meo-ni",kr:"외할머니",en:"Grandmother (maternal)"},
+    {rom:"sam-chon",kr:"삼촌",en:"Uncle"},
+    {rom:"i-mo",kr:"이모",en:"Aunt (mother's side)"},
+    {rom:"nam-pyeon",kr:"남편",en:"Husband"},
+    {rom:"a-nae",kr:"아내",en:"Wife"},
+    {rom:"a-deul",kr:"아들",en:"Son"},
+    {rom:"ttal",kr:"딸",en:"Daughter"},
+    {rom:"son-ja",kr:"손자",en:"Grandson"},
+    {rom:"son-nyeo",kr:"손녀",en:"Granddaughter"},
+    {rom:"nam-ja-chin-gu",kr:"남자친구",en:"Boyfriend"},
+    {rom:"yeo-ja-chin-gu",kr:"여자친구",en:"Girlfriend"},
+    {rom:"sa-rang-ha-neun sa-ram",kr:"사랑하는 사람",en:"Partner / Loved one"},
+  ],
+  greetings:[
+    {rom:"annyeong-ha-se-yo",kr:"안녕하세요",en:"Hello (formal)"},
+    {rom:"annyeong",kr:"안녕",en:"Hi / Bye (casual)"},
+    {rom:"joeun ach-im-i-e-yo",kr:"좋은 아침이에요",en:"Good morning"},
+    {rom:"joeun ohu-eyo",kr:"좋은 오후예요",en:"Good afternoon"},
+    {rom:"joeun jeonyeog-ieyo",kr:"좋은 저녁이에요",en:"Good evening"},
+    {rom:"annyeong-hi jumusyeo",kr:"안녕히 주무세요",en:"Good night"},
+    {rom:"annyeong-hi ga-seyo",kr:"안녕히 가세요",en:"Goodbye (to person leaving)"},
+    {rom:"annyeong-hi gye-seyo",kr:"안녕히 계세요",en:"Goodbye (when you are leaving)"},
+    {rom:"man-na-seo ban-ga-wo-yo",kr:"만나서 반가워요",en:"Nice to meet you"},
+    {rom:"o-rae-gan-man-i-e-yo",kr:"오래간만이에요",en:"Long time no see"},
+    {rom:"bab meog-eo-sseo-yo?",kr:"밥 먹었어요?",en:"Have you eaten? (common greeting)"},
+    {rom:"jal ji-naess-eo-yo?",kr:"잘 지내셨어요?",en:"How have you been?"},
+    {rom:"jo-sim-ha-se-yo",kr:"조심하세요",en:"Take care"},
+    {rom:"haeng-un-eul bil-eo-yo",kr:"행운을 빌어요",en:"Good luck"},
+    {rom:"seo-ul-lo o-se-yo",kr:"서울로 오세요",en:"Come to Seoul! (invitation)"},
+  ],
+  health:[
+    {rom:"a-peo-yo",kr:"아파요",en:"I'm sick / It hurts"},
+    {rom:"tong-jeung",kr:"통증",en:"Pain"},
+    {rom:"yeol-i na-yo",kr:"열이 나요",en:"I have a fever"},
+    {rom:"jae-chae-gi-ha-da",kr:"재채기하다",en:"Sneeze"},
+    {rom:"gi-chim",kr:"기침",en:"Cough"},
+    {rom:"du-tong",kr:"두통",en:"Headache"},
+    {rom:"bae-tong",kr:"배통",en:"Stomachache"},
+    {rom:"deung-tong",kr:"등통",en:"Backache"},
+    {rom:"ui-sa",kr:"의사",en:"Doctor"},
+    {rom:"byeong-won",kr:"병원",en:"Hospital"},
+    {rom:"yak-guk",kr:"약국",en:"Pharmacy"},
+    {rom:"yak",kr:"약",en:"Medicine"},
+    {rom:"gu-geup-cha",kr:"구급차",en:"Ambulance"},
+    {rom:"gwaen-chan-a-yo",kr:"괜찮아요",en:"I'm fine / I'm OK"},
+    {rom:"an-joeun-nyeong",kr:"안 좋아요",en:"Not feeling well"},
+    {rom:"hyeo-rap",kr:"혈압",en:"Blood pressure"},
+    {rom:"dang-nyeo-byeong",kr:"당뇨병",en:"Diabetes"},
+    {rom:"a-leu-le-gi",kr:"알레르기",en:"Allergy"},
+    {rom:"cheob-jong",kr:"접종",en:"Injection / Vaccination"},
+    {rom:"chi-bang-jeon",kr:"처방전",en:"Prescription"},
+  ],
+  holidays:[
+    {rom:"hyuga",kr:"휴가",en:"Holiday / Vacation"},
+    {rom:"yeo-haeng",kr:"여행",en:"Travel"},
+    {rom:"bi-haeng-gi",kr:"비행기",en:"Aeroplane"},
+    {rom:"ho-tel",kr:"호텔",en:"Hotel"},
+    {rom:"hae-byeon",kr:"해변",en:"Beach"},
+    {rom:"yeo-gwon",kr:"여권",en:"Passport"},
+    {rom:"hwan-jeon",kr:"환전",en:"Currency exchange"},
+    {rom:"su-ha-mul",kr:"수하물",en:"Luggage"},
+    {rom:"gwi-guk",kr:"귀국",en:"Return home"},
+    {rom:"hae-oe",kr:"해외",en:"Abroad / Overseas"},
+    {rom:"bi-haeng-gi tagi",kr:"비행기 타기",en:"Take a flight"},
+    {rom:"se-gwan tongwa",kr:"세관 통과",en:"Go through customs"},
+    {rom:"bo-heom",kr:"보험",en:"Insurance"},
+    {rom:"geon-gang bo-heom",kr:"건강 보험",en:"Health insurance"},
+  ],
+  home:[
+    {rom:"jip",kr:"집",en:"Home / House"},
+    {rom:"bu-eok",kr:"부엌",en:"Kitchen"},
+    {rom:"chim-sil",kr:"침실",en:"Bedroom"},
+    {rom:"geo-sil",kr:"거실",en:"Living room"},
+    {rom:"hwa-jang-sil",kr:"화장실",en:"Bathroom / Toilet"},
+    {rom:"mun",kr:"문",en:"Door"},
+    {rom:"chang-mun",kr:"창문",en:"Window"},
+    {rom:"sang",kr:"상",en:"Table"},
+    {rom:"ui-ja",kr:"의자",en:"Chair"},
+    {rom:"chim-dae",kr:"침대",en:"Bed"},
+    {rom:"so-pa",kr:"소파",en:"Sofa"},
+    {rom:"jang-rop",kr:"장롭",en:"Cabinet / Wardrobe"},
+    {rom:"naeng-jang-go",kr:"냉장고",en:"Refrigerator"},
+    {rom:"bap-sot",kr:"밥솥",en:"Rice cooker"},
+    {rom:"gye-dan",kr:"계단",en:"Stairs"},
+    {rom:"hyeon-gwan",kr:"현관",en:"Entrance"},
+    {rom:"bal-ko-ni",kr:"발코니",en:"Balcony"},
+    {rom:"jeong-won",kr:"정원",en:"Garden"},
+    {rom:"o-ven",kr:"오븐",en:"Oven"},
+    {rom:"se-tak-gi",kr:"세탁기",en:"Washing machine"},
+  ],
+  machines:[
+    {rom:"keom-pyu-teo",kr:"컴퓨터",en:"Computer"},
+    {rom:"hyu-dae-pon",kr:"휴대폰",en:"Mobile phone"},
+    {rom:"tel-le-bi-jeon",kr:"텔레비전",en:"Television"},
+    {rom:"jeon-hwa",kr:"전화",en:"Telephone"},
+    {rom:"e-eo-kon",kr:"에어컨",en:"Air conditioner"},
+    {rom:"se-tak-gi",kr:"세탁기",en:"Washing machine"},
+    {rom:"jeon-ja-re-in-ji",kr:"전자레인지",en:"Microwave"},
+    {rom:"el-li-be-i-teo",kr:"엘리베이터",en:"Elevator"},
+    {rom:"psu-rin-teo",kr:"프린터",en:"Printer"},
+    {rom:"ka-me-ra",kr:"카메라",en:"Camera"},
+    {rom:"chung-jeon-gi",kr:"충전기",en:"Charger"},
+    {rom:"o-ven",kr:"오븐",en:"Oven"},
+    {rom:"rob-bot cheon-so-gi",kr:"로봇 청소기",en:"Robot vacuum cleaner"},
+    {rom:"tael-let",kr:"태블릿",en:"Tablet"},
+    {rom:"i-eo-pol",kr:"이어폰",en:"Earphones"},
+  ],
+  motoring:[
+    {rom:"ja-dong-cha",kr:"자동차",en:"Car"},
+    {rom:"beo-seu",kr:"버스",en:"Bus"},
+    {rom:"taek-si",kr:"택시",en:"Taxi"},
+    {rom:"ji-ha-cheol",kr:"지하철",en:"Subway / Metro"},
+    {rom:"gi-cha",kr:"기차",en:"Train"},
+    {rom:"ja-jeon-geo",kr:"자전거",en:"Bicycle"},
+    {rom:"gyeol-yu-so",kr:"주유소",en:"Petrol station"},
+    {rom:"ju-cha-jang",kr:"주차장",en:"Car park"},
+    {rom:"gi-cha-ta-da",kr:"기차 타다",en:"Take the train"},
+    {rom:"gyo-tong-jam",kr:"교통 잼",en:"Traffic jam"},
+    {rom:"sin-ho-deung",kr:"신호등",en:"Traffic light"},
+    {rom:"ka-ka-o T",kr:"카카오T",en:"KakaoT (Korean ride-hailing app)"},
+    {rom:"ha-i-we-i",kr:"고속도로",en:"Motorway / Highway"},
+    {rom:"ji-ha-do",kr:"지하도",en:"Underpass"},
+  ],
+  people:[
+    {rom:"sa-ram",kr:"사람",en:"Person"},
+    {rom:"nam-ja",kr:"남자",en:"Man"},
+    {rom:"yeo-ja",kr:"여자",en:"Woman"},
+    {rom:"a-i",kr:"아이",en:"Child"},
+    {rom:"no-in",kr:"노인",en:"Elderly person"},
+    {rom:"chin-gu",kr:"친구",en:"Friend"},
+    {rom:"dong-ryo",kr:"동료",en:"Colleague"},
+    {rom:"seon-saeng-nim",kr:"선생님",en:"Teacher"},
+    {rom:"hak-saeng",kr:"학생",en:"Student"},
+    {rom:"jik-won",kr:"직원",en:"Employee"},
+    {rom:"sa-jang-nim",kr:"사장님",en:"Boss"},
+    {rom:"son-nim",kr:"손님",en:"Customer / Guest"},
+    {rom:"na-gne-saram",kr:"낯선 사람",en:"Stranger"},
+    {rom:"i-ut",kr:"이웃",en:"Neighbour"},
+    {rom:"ui-sa",kr:"의사",en:"Doctor"},
+    {rom:"seo-na-e-nim",kr:"선배님",en:"Senior (older colleague)"},
+    {rom:"hu-bae",kr:"후배",en:"Junior (younger colleague)"},
+  ],
+  places:[
+    {rom:"si-jang",kr:"시장",en:"Market"},
+    {rom:"gong-won",kr:"공원",en:"Park"},
+    {rom:"do-seo-gwan",kr:"도서관",en:"Library"},
+    {rom:"gyeong-chal-seo",kr:"경찰서",en:"Police station"},
+    {rom:"si-nae",kr:"시내",en:"City centre / Downtown"},
+    {rom:"da-ri",kr:"다리",en:"Bridge"},
+    {rom:"gang-byeon",kr:"강변",en:"Riverside"},
+    {rom:"baek-hwa-jeom",kr:"백화점",en:"Department store"},
+    {rom:"yeong-hwa-gwan",kr:"영화관",en:"Cinema"},
+    {rom:"bak-mul-gwan",kr:"박물관",en:"Museum"},
+    {rom:"song-gyo-dang",kr:"성당",en:"Church / Cathedral"},
+    {rom:"sa-won",kr:"사원",en:"Temple"},
+    {rom:"gwang-jang",kr:"광장",en:"Square / Plaza"},
+    {rom:"bun-sik-jip",kr:"분식집",en:"Snack bar / Korean fast food"},
+    {rom:"norae-bang",kr:"노래방",en:"Karaoke room (noraebang)"},
+    {rom:"PC-bang",kr:"PC방",en:"Internet café (PC-bang)"},
+    {rom:"jjimjilbang",kr:"찜질방",en:"Korean sauna / bathhouse"},
+  ],
+  professions:[
+    {rom:"ui-sa",kr:"의사",en:"Doctor"},
+    {rom:"gan-ho-sa",kr:"간호사",en:"Nurse"},
+    {rom:"seon-saeng-nim",kr:"선생님",en:"Teacher"},
+    {rom:"byeon-ho-sa",kr:"변호사",en:"Lawyer"},
+    {rom:"gong-hak-ja",kr:"공학자",en:"Engineer"},
+    {rom:"gi-sa",kr:"기사",en:"Driver"},
+    {rom:"yo-ri-sa",kr:"요리사",en:"Chef"},
+    {rom:"gyeong-chal-gwan",kr:"경찰관",en:"Police officer"},
+    {rom:"so-bang-gwan",kr:"소방관",en:"Firefighter"},
+    {rom:"gi-ja",kr:"기자",en:"Journalist"},
+    {rom:"hoe-gye-sa",kr:"회계사",en:"Accountant"},
+    {rom:"chi-gwa-ui-sa",kr:"치과의사",en:"Dentist"},
+    {rom:"gon-chuk-ga",kr:"건축가",en:"Architect"},
+    {rom:"sa-jin-jak-ga",kr:"사진작가",en:"Photographer"},
+    {rom:"ga-su",kr:"가수",en:"Singer"},
+    {rom:"bae-u",kr:"배우",en:"Actor / Actress"},
+    {rom:"peu-ro-geu-raem-meo",kr:"프로그래머",en:"Programmer"},
+  ],
+  pronouns:[
+    {rom:"jeo / na",kr:"저 / 나",en:"I / Me (저=formal, 나=casual)"},
+    {rom:"neo / dangshin",kr:"너 / 당신",en:"You (너=casual, 당신=formal/romantic)"},
+    {rom:"geu / geunyeo",kr:"그 / 그녀",en:"He / She"},
+    {rom:"uri",kr:"우리",en:"We / Us"},
+    {rom:"neo-heui",kr:"너희",en:"You all (casual)"},
+    {rom:"geu-deul",kr:"그들",en:"They"},
+    {rom:"je",kr:"제",en:"My (formal)"},
+    {rom:"ne",kr:"내",en:"My (casual)"},
+    {rom:"i-bun",kr:"이분",en:"This person (respectful)"},
+    {rom:"jam-ja-gi",kr:"자기",en:"Honey / Darling (used in couples)"},
+    {rom:"nu-gu",kr:"누구",en:"Who?"},
+    {rom:"eo-tteon sa-ram",kr:"어떤 사람",en:"What kind of person?"},
+    {rom:"mo-du",kr:"모두",en:"Everyone"},
+  ],
+  school:[
+    {rom:"hak-gyo",kr:"학교",en:"School"},
+    {rom:"dae-hak",kr:"대학",en:"University"},
+    {rom:"jung-hak-gyo",kr:"중학교",en:"Middle school"},
+    {rom:"cho-deung-hak-gyo",kr:"초등학교",en:"Primary school"},
+    {rom:"gwa-mok",kr:"과목",en:"Subject"},
+    {rom:"chaek",kr:"책",en:"Book"},
+    {rom:"yeon-pil",kr:"연필",en:"Pencil"},
+    {rom:"jong-i",kr:"종이",en:"Paper"},
+    {rom:"si-heom",kr:"시험",en:"Exam"},
+    {rom:"suk-je",kr:"숙제",en:"Homework"},
+    {rom:"bang-gwa-hu",kr:"방과후",en:"After school"},
+    {rom:"baek-pan",kr:"백판",en:"Whiteboard"},
+    {rom:"gyo-sil",kr:"교실",en:"Classroom"},
+    {rom:"haek-saeng-hoe",kr:"학생회",en:"Student council"},
+    {rom:"bul-rak",kr:"블라",en:"School lunch"},
+    {rom:"hak-gi",kr:"학기",en:"School term / Semester"},
+    {rom:"hak-bu-mo-mo-im",kr:"학부모 모임",en:"Parent-teacher meeting"},
+  ],
+  seasons:[
+    {rom:"bom",kr:"봄",en:"Spring"},
+    {rom:"yeo-reum",kr:"여름",en:"Summer"},
+    {rom:"ga-eul",kr:"가을",en:"Autumn"},
+    {rom:"gyeo-ul",kr:"겨울",en:"Winter"},
+    {rom:"u-gi",kr:"우기",en:"Rainy season"},
+    {rom:"jang-ma",kr:"장마",en:"Monsoon season (Korean rainy season)"},
+    {rom:"geon-gi",kr:"건기",en:"Dry season"},
+    {rom:"kkot-pi-neun gye-jeol",kr:"꽃피는 계절",en:"Blossom season"},
+  ],
+  special_occasions:[
+    {rom:"saengil chukha-haeyo",kr:"생일 축하해요",en:"Happy Birthday"},
+    {rom:"saehae bok mani badeuseyo",kr:"새해 복 많이 받으세요",en:"Happy New Year"},
+    {rom:"meoli Christmas",kr:"메리 크리스마스",en:"Merry Christmas"},
+    {rom:"chuseok",kr:"추석",en:"Chuseok (Harvest festival / Korean Thanksgiving)"},
+    {rom:"seollal",kr:"설날",en:"Korean Lunar New Year"},
+    {rom:"baek-il",kr:"백일",en:"100th day celebration (babies)"},
+    {rom:"dol",kr:"돌",en:"First birthday (Korean tradition)"},
+    {rom:"jeon-tong hon-ryye",kr:"전통 혼례",en:"Traditional Korean wedding"},
+    {rom:"eorini-nal",kr:"어린이날",en:"Children's Day (May 5)"},
+    {rom:"eo-beo-i-nal",kr:"어버이날",en:"Parents' Day (May 8)"},
+    {rom:"gwa-ja",kr:"과자",en:"Snacks / Confectionery"},
+    {rom:"seon-mul",kr:"선물",en:"Gift"},
+    {rom:"seuk-eul",kr:"축하해요",en:"Congratulations!"},
+  ],
+  sport:[
+    {rom:"chuk-gu",kr:"축구",en:"Football / Soccer"},
+    {rom:"nong-gu",kr:"농구",en:"Basketball"},
+    {rom:"ya-gu",kr:"야구",en:"Baseball (hugely popular in Korea)"},
+    {rom:"ttak-gu",kr:"탁구",en:"Table tennis"},
+    {rom:"bae-deu-min-ton",kr:"배드민턴",en:"Badminton"},
+    {rom:"su-yeong",kr:"수영",en:"Swimming"},
+    {rom:"dal-li-gi",kr:"달리기",en:"Running"},
+    {rom:"ja-jeon-geo",kr:"자전거",en:"Cycling"},
+    {rom:"un-dong",kr:"운동",en:"Exercise"},
+    {rom:"deung-san",kr:"등산",en:"Hiking"},
+    {rom:"yo-ga",kr:"요가",en:"Yoga"},
+    {rom:"gwon-tu",kr:"권투",en:"Boxing"},
+    {rom:"tae-kwon-do",kr:"태권도",en:"Taekwondo (Korean martial art)"},
+    {rom:"hwal",kr:"활",en:"Archery (Korean tradition)"},
+    {rom:"hel-seu-jang",kr:"헬스장",en:"Gym"},
+    {rom:"gol-peu",kr:"골프",en:"Golf"},
+    {rom:"bae-gu",kr:"배구",en:"Volleyball"},
+    {rom:"bing-sang-seu-ke-i-ting",kr:"빙상스케이팅",en:"Ice skating"},
+  ],
+  kpop:[
+    {rom:"ke-i-pop",kr:"K팝",en:"K-Pop"},
+    {rom:"a-i-dol",kr:"아이돌",en:"Idol (K-pop star)"},
+    {rom:"peu-laen",kr:"팬",en:"Fan"},
+    {rom:"peu-laen-dom",kr:"팬덤",en:"Fandom"},
+    {rom:"uen-bing",kr:"앨범",en:"Album"},
+    {rom:"con-seu-teu",kr:"콘서트",en:"Concert"},
+    {rom:"mu-ji-keu-bi-deo",kr:"뮤직비디오",en:"Music video (MV)"},
+    {rom:"de-byu",kr:"데뷔",en:"Debut"},
+    {rom:"geon-bae",kr:"건배",en:"Cheers! (toast)"},
+    {rom:"daebak",kr:"대박",en:"Amazing! / Jackpot! (exclamation)"},
+    {rom:"heo-geo",kr:"허거",en:"Stunning / Handsome (slang)"},
+    {rom:"saeng-gak",kr:"생각",en:"Oppa / Older brother (fangirl term)"},
+    {rom:"ma-e-seu-teo",kr:"마에스터",en:"Maknae (youngest in group)"},
+    {rom:"maek-neu",kr:"막내",en:"Maknae (youngest member)"},
+    {rom:"hal-lyuDrama",kr:"한류 드라마",en:"Korean Wave / K-drama"},
+    {rom:"joo-in-gong",kr:"주인공",en:"Main character / Protagonist"},
+    {rom:"oc-tha-beu",kr:"옥탑방",en:"Rooftop room (drama trope)"},
+    {rom:"bi-mi",kr:"비밀",en:"Secret"},
+    {rom:"bbal-li-bbal-li",kr:"빨리빨리",en:"Hurry hurry! (Korean culture)"},
+    {rom:"heung",kr:"흥",en:"Heung — the vibe / energy (untranslatable)"},
+    {rom:"nunchi",kr:"눈치",en:"Nunchi — reading the room"},
+    {rom:"jeong",kr:"정",en:"Jeong — deep emotional bond"},
+    {rom:"han",kr:"한",en:"Han — collective sorrow / longing"},
+  ],
+  slang:[
+    {rom:"daebak!",kr:"대박!",en:"Awesome! / No way! / Jackpot!"},
+    {rom:"heol",kr:"헐",en:"OMG / Wow (disbelief)"},
+    {rom:"olraeganmani",kr:"오랜만이야",en:"Long time no see (casual)"},
+    {rom:"buja",kr:"부자",en:"Ballin' / Rich (slang)"},
+    {rom:"ggodak",kr:"꼭닥",en:"Totally broke"},
+    {rom:"ssabal",kr:"싸발",en:"Damn it (mild swear — recognition only)"},
+    {rom:"bballi bballi",kr:"빨리빨리",en:"Hurry hurry! (Korean cultural motto)"},
+    {rom:"mungchimi",kr:"멍청이",en:"Idiot / Dummy"},
+    {rom:"anemo",kr:"아님",en:"Nope / That's not it (internet slang)"},
+    {rom:"gabjari",kr:"갑자기",en:"Suddenly / Out of nowhere — often meme usage"},
+    {rom:"ㅋㅋㅋ",kr:"ㅋㅋㅋ",en:"kkkk — Korean 'lol' (keyboard Korean)"},
+    {rom:"ㅎㅎ",kr:"ㅎㅎ",en:"hehe — gentle laugh (less intense than kkk)"},
+    {rom:"ㅠㅠ",kr:"ㅠㅠ",en:"TT — crying emoticon"},
+    {rom:"ㅇㅇ",kr:"ㅇㅇ",en:"Yeah / Okay (abbreviation of 응응)"},
+    {rom:"jinjja?",kr:"진짜?",en:"Really? / Seriously? (very common)"},
+    {rom:"aigoo",kr:"아이고",en:"Oh my / Goodness (expression of exasperation)"},
+    {rom:"ppalgang",kr:"빨강",en:"Red flag (literal and dating slang)"},
+    {rom:"sogeum",kr:"소름",en:"Goosebumps / Chills (wow reaction)"},
+    {rom:"dasi barambeora",kr:"다시 바람 봐",en:"Check the vibe again — take it slow"},
+    {rom:"negga seondaeyo",kr:"내가 선대요",en:"I'll go first / I'll pay (informal heroism)"},
+    {rom:"mwohal geoya",kr:"뭐할 거야",en:"What are you gonna do about it? (sarcastic)"},
+    {rom:"ha sekeut",kr:"하 씨",en:"Ugh / For crying out loud (mild frustration)"},
+  ],
+  verbs:[
+    {rom:"gada",kr:"가다",en:"Go"},
+    {rom:"oda",kr:"오다",en:"Come"},
+    {rom:"meokda",kr:"먹다",en:"Eat"},
+    {rom:"masida",kr:"마시다",en:"Drink"},
+    {rom:"dolawoda",kr:"돌아오다",en:"Return"},
+    {rom:"malhada",kr:"말하다",en:"Speak / Say"},
+    {rom:"boda",kr:"보다",en:"See / Watch"},
+    {rom:"deutda",kr:"듣다",en:"Listen"},
+    {rom:"sada",kr:"사다",en:"Buy"},
+    {rom:"palda",kr:"팔다",en:"Sell"},
+    {rom:"hada",kr:"하다",en:"Do / Make"},
+    {rom:"yeolda",kr:"열다",en:"Open"},
+    {rom:"datda",kr:"닫다",en:"Close"},
+    {rom:"jada",kr:"자다",en:"Sleep"},
+    {rom:"ileo-nada",kr:"일어나다",en:"Wake up"},
+    {rom:"geotda",kr:"걷다",en:"Walk"},
+    {rom:"dallida",kr:"달리다",en:"Run"},
+    {rom:"ssitda",kr:"씻다",en:"Wash"},
+    {rom:"sipda",kr:"싶다",en:"Want"},
+    {rom:"joahada",kr:"좋아하다",en:"Like"},
+    {rom:"sireohada",kr:"싫어하다",en:"Dislike"},
+    {rom:"piryo-hada",kr:"필요하다",en:"Need"},
+    {rom:"norlda",kr:"놀다",en:"Play"},
+    {rom:"ut-da",kr:"웃다",en:"Laugh"},
+    {rom:"ul-da",kr:"울다",en:"Cry"},
+    {rom:"gieo-ngada",kr:"기억하다",en:"Remember"},
+    {rom:"ijda",kr:"잊다",en:"Forget"},
+    {rom:"gareu-chida",kr:"가르치다",en:"Teach"},
+    {rom:"baeuda",kr:"배우다",en:"Learn"},
+    {rom:"beon-yeok-hada",kr:"번역하다",en:"Translate"},
+    {rom:"int-eo-net-hada",kr:"인터넷하다",en:"Go online"},
+    {rom:"jeonhwa-hada",kr:"전화하다",en:"Make a phone call"},
+    {rom:"mun-ja-hada",kr:"문자하다",en:"Send a text"},
+  ],
+  weather:[
+    {rom:"nal-ssi",kr:"날씨",en:"Weather"},
+    {rom:"mal-eun-nal",kr:"맑은 날",en:"Sunny day"},
+    {rom:"hu-rin-nal",kr:"흐린 날",en:"Cloudy day"},
+    {rom:"bi ga wa",kr:"비가 와",en:"It's raining"},
+    {rom:"nun-i wa",kr:"눈이 와",en:"It's snowing"},
+    {rom:"ba-ram-i bul-eo",kr:"바람이 불어",en:"It's windy"},
+    {rom:"tae-pung",kr:"태풍",en:"Typhoon"},
+    {rom:"oneul nal-ssi ga deo-wo",kr:"오늘 날씨 가 더워",en:"Today is very hot"},
+    {rom:"oneul nal-ssi ga chu-wo",kr:"오늘 날씨 가 추워",en:"Today is very cold"},
+    {rom:"jang-ma cheo-l",kr:"장마 철",en:"Monsoon season"},
+    {rom:"i-seu-ra-el nal",kr:"추운 날",en:"Cold day (feeling cold)"},
+    {rom:"so-na-gi",kr:"소나기",en:"Sudden shower"},
+    {rom:"pok-u",kr:"폭우",en:"Heavy rain / downpour"},
+    {rom:"an-gae",kr:"안개",en:"Fog"},
+    {rom:"mi-se meonji",kr:"미세먼지",en:"Fine dust / Smog (major Korea issue)"},
+    {rom:"mu-ji-gae",kr:"무지개",en:"Rainbow"},
+    {rom:"gong-gi-ji-ryang",kr:"공기질량",en:"Air quality"},
+  ],
+  counters:[
+    {rom:"gae",kr:"개",en:"General counter — objects"},
+    {rom:"myeong",kr:"명",en:"People (formal)"},
+    {rom:"saram",kr:"사람",en:"People (casual)"},
+    {rom:"beon",kr:"번",en:"Times / Occurrences"},
+    {rom:"won",kr:"원",en:"Korean Won (currency)"},
+    {rom:"gang",kr:"강",en:"Classes / Lessons"},
+    {rom:"jan",kr:"잔",en:"Cups / Glasses of drink"},
+    {rom:"geurot",kr:"그릇",en:"Bowls of food"},
+    {rom:"gwon",kr:"권",en:"Books"},
+    {rom:"bong-ji",kr:"봉지",en:"Bags / Packets"},
+    {rom:"dae",kr:"대",en:"Vehicles / Machines"},
+    {rom:"ha-ru",kr:"하루",en:"Days"},
+    {rom:"ju",kr:"주",en:"Weeks"},
+    {rom:"dal",kr:"달",en:"Months"},
+    {rom:"nyeon",kr:"년",en:"Years"},
+    {rom:"tu myeong",kr:"두 명",en:"Two people (use 두 not 이)"},
+  ],
+};
+
+// ============================================================
+//  CARD RENDERER
+// ============================================================
+function hasRecording(kr){return !!loadCustomRecordings()[kr];}
+
+function renderGrid(id,data){
+  const el=document.getElementById('grid-'+id);if(!el)return;
+  el.innerHTML=data.map(item=>{
+    const speakText=item.kr||item.rom;
+    const hasRec=hasRecording(item.kr||item.rom);
+    return `<div class="vocab-card">
+      ${hasRec?`<span class="rec-badge">🎙️ REC</span>`:''}
+      <div class="card-hangul">${item.kr}</div>
+      <div class="card-roman">${item.rom}</div>
+      <div class="card-meaning">${item.en}</div>
+      <div class="card-buttons">
+        <div class="listen-group">
+          <button class="listen-normal" onclick="speak('${speakText.replace(/'/g,"\\'")}',1)" title="Normal speed">🔊 Listen</button>
+          <button class="listen-slow" onclick="speak('${speakText.replace(/'/g,"\\'")}',0.5)" title="Slow">🐢 Slow</button>
+        </div>
+        <button class="card-record" onclick="openRecordingModal('${(item.kr||item.rom).replace(/'/g,"\\'")}')">🎙️ Record</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+Object.keys(VOCAB).forEach(k=>renderGrid(k,VOCAB[k]));
+
+// ============================================================
+//  HANGUL GUIDE
+// ============================================================
+function renderHangulGuide(){
+  const el=document.getElementById('hangulGuideGrid');if(!el)return;
+  const consonants=[
+    {letter:"ㄱ",name:"giyeok",sound:"g/k"},
+    {letter:"ㄴ",name:"nieun",sound:"n"},
+    {letter:"ㄷ",name:"digeut",sound:"d/t"},
+    {letter:"ㄹ",name:"rieul",sound:"r/l"},
+    {letter:"ㅁ",name:"mieum",sound:"m"},
+    {letter:"ㅂ",name:"bieup",sound:"b/p"},
+    {letter:"ㅅ",name:"siot",sound:"s"},
+    {letter:"ㅇ",name:"ieung",sound:"silent/ng"},
+    {letter:"ㅈ",name:"jieut",sound:"j"},
+    {letter:"ㅊ",name:"chieut",sound:"ch"},
+    {letter:"ㅋ",name:"kieuk",sound:"k"},
+    {letter:"ㅌ",name:"tieut",sound:"t"},
+    {letter:"ㅍ",name:"pieup",sound:"p"},
+    {letter:"ㅎ",name:"hieut",sound:"h"},
+  ];
+  const vowels=[
+    {letter:"ㅏ",name:"a",sound:"a (father)"},
+    {letter:"ㅓ",name:"eo",sound:"eo (uh)"},
+    {letter:"ㅗ",name:"o",sound:"o (go)"},
+    {letter:"ㅜ",name:"u",sound:"oo (moon)"},
+    {letter:"ㅡ",name:"eu",sound:"eu (unrounded oo)"},
+    {letter:"ㅣ",name:"i",sound:"i (machine)"},
+    {letter:"ㅐ",name:"ae",sound:"ae (bed)"},
+    {letter:"ㅔ",name:"e",sound:"e (bed)"},
+    {letter:"ㅑ",name:"ya",sound:"ya"},
+    {letter:"ㅕ",name:"yeo",sound:"yeo"},
+  ];
+  el.innerHTML = `
+    <div class="wide-card" style="grid-column:1/-1;"><h3>Consonants (자음)</h3><p>Korean has 14 basic consonants. Each has a name and represents a sound at the start or end of a syllable.</p></div>
+    ${consonants.map(c=>`<div class="hangul-guide-card"><div class="h-letter" style="color:var(--accent);">${c.letter}</div><div class="h-name">${c.name}</div><div class="h-desc">Sound: <strong>${c.sound}</strong></div></div>`).join('')}
+    <div class="wide-card" style="grid-column:1/-1;margin-top:1rem;"><h3>Vowels (모음)</h3><p>10 basic vowels. Combined with consonants to form syllable blocks like 한 (han).</p></div>
+    ${vowels.map(v=>`<div class="hangul-guide-card"><div class="h-letter" style="color:var(--accent2);">${v.letter}</div><div class="h-name">${v.name}</div><div class="h-desc">Sound: <strong>${v.sound}</strong></div></div>`).join('')}
+    <div class="wide-card" style="grid-column:1/-1;margin-top:1rem;"><h3>How syllable blocks work</h3><p>Letters are stacked into blocks. <strong style="color:var(--accent)">한</strong> = ㅎ (h) + ㅏ (a) + ㄴ (n). <strong style="color:var(--accent2)">국</strong> = ㄱ (g) + ㅜ (u) + ㄱ (k). Together: 한국 = "Hanguk" = Korea!</p></div>
+  `;
+}
+renderHangulGuide();
+
+// ============================================================
+//  CONVERSATION GUIDE
+// ============================================================
+const CONVERSATIONS=[
+  {title:"☕ Meeting someone for the first time",tip:"<strong>Key tip:</strong> 밥 먹었어요? (bab meog-eo-sseo-yo) — 'Have you eaten?' is a common Korean greeting, especially between friends!",lines:[
+    {a:true,kr:"안녕하세요! 저는 민준이에요. 이름이 뭐예요?",en:"Hello! I'm Minjun. What's your name?"},
+    {a:false,kr:"안녕하세요! 저는 Sarah예요. 만나서 반가워요!",en:"Hello! I'm Sarah. Nice to meet you!"},
+    {a:true,kr:"어디서 오셨어요?",en:"Where are you from?"},
+    {a:false,kr:"저는 영국 사람이에요. 당신은요?",en:"I'm British. And you?"},
+    {a:false,kr:"한국어를 조금 할 수 있어요. 천천히 말해주세요.",en:"I can speak a little Korean. Please speak slowly."},
+    {a:true,kr:"괜찮아요! 천천히 얘기해요.",en:"No problem! Let's take it slow."},
+  ]},
+  {title:"🍜 Ordering at a restaurant",tip:"<strong>Key tip:</strong> 여기요! (Yeogi-yo!) gets the waiter. Say 잘 먹겠습니다 before eating and 잘 먹었습니다 after — it shows respect!",lines:[
+    {a:false,kr:"여기요! 자리 있어요?",en:"Excuse me! Do you have a table?"},
+    {a:true,kr:"네, 있어요. 몇 명이세요?",en:"Yes, we do. How many people?"},
+    {a:false,kr:"두 명이요.",en:"Two people."},
+    {a:false,kr:"비빔밥 하나랑 김치찌개 하나 주세요.",en:"One bibimbap and one kimchi stew please."},
+    {a:true,kr:"음료수는요?",en:"And to drink?"},
+    {a:false,kr:"물 주세요. 그리고 소주 한 병이요.",en:"Water please. And a bottle of soju."},
+    {a:false,kr:"여기요! 계산서 주세요.",en:"Excuse me! Check please."},
+  ]},
+  {title:"🚇 Asking for directions",tip:"<strong>Key tip:</strong> Seoul's subway is very well signed in English too. But knowing 어디에요? (Where is?) will get you far!",lines:[
+    {a:false,kr:"실례합니다, 지하철역이 어디에요?",en:"Excuse me, where is the subway station?"},
+    {a:true,kr:"직진하다가 오른쪽으로 돌아가세요.",en:"Go straight and then turn right."},
+    {a:false,kr:"멀어요?",en:"Is it far?"},
+    {a:true,kr:"아니요, 걸어서 5분이에요.",en:"No, it's about a 5-minute walk."},
+    {a:false,kr:"감사합니다!",en:"Thank you!"},
+  ]},
+  {title:"🛍️ Shopping at Myeongdong",tip:"<strong>Key tip:</strong> 깎아주세요 (Kkakka juseyo) = 'Please give me a discount!' — works at markets and small shops.",lines:[
+    {a:false,kr:"이거 얼마예요?",en:"How much is this?"},
+    {a:true,kr:"이만 원이요.",en:"It's 20,000 won."},
+    {a:false,kr:"좀 깎아 주세요.",en:"Can you give me a discount?"},
+    {a:true,kr:"만 팔천 원까지만 할게요.",en:"I can do 18,000 won."},
+    {a:false,kr:"좋아요! 살게요.",en:"OK! I'll take it."},
+  ]},
+  {title:"📱 Kakao conversation",tip:"<strong>Key tip:</strong> Koreans often communicate on KakaoTalk. 오케이 (o-ke-i) is universal!",lines:[
+    {a:false,kr:"내일 시간 돼?",en:"Are you free tomorrow? (casual)"},
+    {a:true,kr:"응! 몇 시에?",en:"Yeah! What time?"},
+    {a:false,kr:"저녁 7시에 홍대에서 만나자.",en:"Let's meet at Hongdae at 7pm."},
+    {a:true,kr:"오케이! 거기서 봐!",en:"OK! See you there!"},
+  ]},
+  {title:"🏥 At the doctor",tip:"<strong>Key tip:</strong> 어디가 아프세요? means 'Where does it hurt?' Korean doctors often ask this first.",lines:[
+    {a:false,kr:"저 몸이 안 좋아요. 열도 있고 두통도 있어요.",en:"I don't feel well. I have a fever and headache."},
+    {a:true,kr:"언제부터요?",en:"Since when?"},
+    {a:false,kr:"어제부터요.",en:"Since yesterday."},
+    {a:true,kr:"약 처방해 드릴게요. 물 많이 마시고 쉬세요.",en:"I'll prescribe medicine. Drink lots of water and rest."},
+  ]},
+];
+function renderConvoGuide(){
+  const el=document.getElementById('convoGuideContent');if(!el)return;
+  el.innerHTML=CONVERSATIONS.map(conv=>`<div class="convo-card"><h3>${conv.title}</h3>${conv.lines.map(l=>`<div class="convo-line"><span class="speaker-tag ${l.a?'tag-a':'tag-b'}">${l.a?'A':'B'}</span><span class="convo-hz">${l.kr}</span><span class="convo-en">${l.en}</span><button class="convo-listen" onclick="speak('${l.kr.replace(/'/g,"\\'")}')">🔊</button></div>`).join('')}<div class="convo-tip">${conv.tip}</div></div>`).join('');
+}
+renderConvoGuide();
+
+// ============================================================
+//  INTERMEDIATE PANELS
+// ============================================================
+function renderGrammarParticles(){
+  const p=[
+    {particle:"이/가",rom:"i/ga",en:"Subject marker — marks the subject of a sentence",ex:"사과가 맛있어요 (The apple is delicious)"},
+    {particle:"은/는",rom:"eun/neun",en:"Topic marker — marks the topic (often contrast)",ex:"저는 학생이에요 (As for me, I'm a student)"},
+    {particle:"을/를",rom:"eul/reul",en:"Object marker — marks the direct object",ex:"밥을 먹어요 (I eat rice)"},
+    {particle:"에",rom:"e",en:"Location/time marker — at, in, on, to",ex:"학교에 가요 (I go to school)"},
+    {particle:"에서",rom:"eseo",en:"Location marker — from, at (action happening there)",ex:"도서관에서 공부해요 (I study at the library)"},
+    {particle:"으로/로",rom:"euro/ro",en:"Direction / means — towards, by (way of)",ex:"버스로 가요 (I go by bus)"},
+    {particle:"와/과, 하고",rom:"wa/gwa, hago",en:"And (between nouns)",ex:"사과하고 바나나 (apple and banana)"},
+    {particle:"의",rom:"ui",en:"Possessive — of, 's",ex:"선생님의 책 (the teacher's book)"},
+    {particle:"도",rom:"do",en:"Also / too",ex:"저도 가요 (I'm going too)"},
+    {particle:"만",rom:"man",en:"Only / just",ex:"물만 마셔요 (I only drink water)"},
+  ];
+  document.getElementById('grid-grammar_particles').innerHTML=`<div class="wide-card"><h3>Korean Sentence Particles</h3><p>Particles are the backbone of Korean grammar. They attach directly to nouns and tell you the noun's role. Unlike English word order, Korean relies on particles — so you can rearrange the sentence freely!</p><div class="examples">${p.map(x=>`<div class="example-row"><span class="ex-jp" style="font-family:'Noto Sans KR',sans-serif;font-size:1.1rem;">${x.particle}</span><span class="ex-en" style="min-width:90px;">[${x.rom}]</span><span class="ex-en">${x.en} — <em>${x.ex}</em></span><button class="ex-listen" onclick="speak('${x.ex.replace(/'/g,"\\'")}')">🔊</button></div>`).join('')}</div></div>`;
+}
+function renderHonorifics(){
+  const items=[
+    {title:"Formal Polite — 합니다체 (hamnida-che)",desc:"Used in: news, presentations, first meetings, job interviews, with very senior people. Verb endings: -ㅂ니다 / -습니다 / -ㅂ니까?",ex:"감사합니다. / 가겠습니다."},
+    {title:"Informal Polite — 해요체 (haeyo-che)",desc:"Most common in daily life. Use with adults, strangers, coworkers. Add 요 (yo) to the verb stem. This is what learners should master first.",ex:"감사해요. / 가요. / 먹어요."},
+    {title:"Casual — 반말 (banmal)",desc:"Use ONLY with close friends your age or younger people. Never with elders or strangers. Remove 요 from 해요 form.",ex:"고마워. / 가. / 먹어."},
+    {title:"Honorific vocabulary",desc:"Some words entirely change for respect. These aren't just endings — the whole word is different!",ex:"밥 → 진지 (food/meal for elders) | 나이 → 연세 (age for elders) | 이름 → 성함 (name for elders)"},
+  ];
+  document.getElementById('grid-honorifics').innerHTML=items.map(i=>`<div class="wide-card"><h3>${i.title}</h3><p>${i.desc}</p><p style="margin-top:.6rem;padding:.4rem .7rem;background:var(--surface2);border-radius:6px;font-family:'Noto Sans KR',sans-serif;color:var(--accent);">${i.ex}</p></div>`).join('');
+}
+function renderThisThat(){
+  const items=[
+    {kr:"이것",rom:"igeot",en:"This (thing)"},
+    {kr:"그것",rom:"geugeot",en:"That (thing — near listener)"},
+    {kr:"저것",rom:"jeogeot",en:"That (thing — far from both)"},
+    {kr:"여기",rom:"yeogi",en:"Here"},
+    {kr:"거기",rom:"geogi",en:"There (near listener)"},
+    {kr:"저기",rom:"jeogi",en:"Over there"},
+    {kr:"이 사람",rom:"i saram",en:"This person"},
+    {kr:"그 사람",rom:"geu saram",en:"That person"},
+    {kr:"이런",rom:"ireon",en:"This kind of"},
+    {kr:"그런",rom:"geureon",en:"That kind of"},
+  ];
+  document.getElementById('grid-this_that').innerHTML=`<div class="wide-card"><h3>이/그/저 — Korean demonstratives</h3><p>Korean has a THREE-WAY distinction: <strong style="color:var(--accent)">이 (i)</strong> = near the speaker, <strong style="color:var(--accent2)">그 (geu)</strong> = near the listener, <strong style="color:var(--text)">저 (jeo)</strong> = far from both. This is more refined than English 'this/that'!</p><div class="examples">${items.map(x=>`<div class="example-row"><span style="font-family:'Noto Sans KR',sans-serif;font-size:1.1rem;color:var(--text);min-width:70px;">${x.kr}</span><span class="ex-jp">[${x.rom}]</span><span class="ex-en">${x.en}</span><button class="ex-listen" onclick="speak('${x.kr}')">🔊</button></div>`).join('')}</div></div>`;
+}
+function renderCommonMistakes(){
+  const pairs=[
+    {a:"배 (bae)",ae:"Stomach",b:"배 (bae)",be:"Boat — same spelling! Context matters"},
+    {a:"말 (mal)",ae:"Word / Language",b:"말 (mal)",be:"Horse — tone of voice matters"},
+    {a:"눈 (nun)",ae:"Snow",b:"눈 (nun)",be:"Eyes — context tells you which"},
+    {a:"밥 (bap)",ae:"Cooked rice",b:"밥 (bap)",be:"Meal (in general) — Koreans use one word for both!"},
+    {a:"가다 (gada)",ae:"To go",b:"오다 (oda)",be:"To come — mixed up by English speakers"},
+    {a:"이에요 (ieyo)",ae:"Used after consonant",b:"예요 (yeyo)",be:"Used after vowel — both mean 'is/am/are'"},
+    {a:"은/는 (eun/neun)",ae:"Topic marker",b:"이/가 (i/ga)",be:"Subject marker — easy to confuse, different nuance"},
+  ];
+  document.getElementById('grid-common_mistakes').innerHTML=`<div class="wide-card"><h3>Words that look/sound the same</h3><div class="examples">${pairs.map(p=>`<div class="example-row"><span class="ex-jp">${p.a}</span><span class="ex-en">${p.ae}</span><span style="color:var(--text-dim);margin:0 .5rem;font-weight:700;">vs</span><span class="ex-jp">${p.b}</span><span class="ex-en">${p.be}</span></div>`).join('')}</div></div>`;
+}
+function renderProverbs(){
+  const proverbs=[
+    {kr:"가는 말이 고와야 오는 말이 곱다",rom:"ganeun mari gowaya oneun mari gopda",en:"The words you send out come back to you — treat others as you want to be treated"},
+    {kr:"원숭이도 나무에서 떨어진다",rom:"wonsungido namueseo tteoreojinda",en:"Even monkeys fall from trees — everyone makes mistakes"},
+    {kr:"세 살 버릇 여든까지 간다",rom:"se sal beoreut yeodeunkkaji ganda",en:"Habits formed at three last till eighty — start good habits young"},
+    {kr:"하늘이 무너져도 솟아날 구멍이 있다",rom:"haneuri muneopyeodo sotanal gumeongi itda",en:"Even if the sky falls, there's a hole to rise through — there's always hope"},
+    {kr:"고생 끝에 낙이 온다",rom:"gosaeng kkeute nagi onda",en:"After hardship comes pleasure — no pain no gain"},
+    {kr:"낮말은 새가 듣고 밤말은 쥐가 듣는다",rom:"nanmareun saega deutgo bammareun jwiga deunneunda",en:"Birds hear the day words, mice hear the night words — walls have ears"},
+  ];
+  document.getElementById('grid-proverbs').innerHTML=proverbs.map((p,i)=>`<div class="wide-card"><h3>속담 ${i+1}</h3><p style="font-family:'Noto Sans KR',sans-serif;font-size:1rem;color:var(--text);margin-bottom:.3rem;">${p.kr}</p><p style="font-family:'Space Mono',monospace;font-size:.8rem;color:var(--accent2);">${p.rom}</p><p style="margin-top:.5rem;color:var(--text-muted);font-size:.88rem;">💡 ${p.en}</p><button class="ex-listen" onclick="speak('${p.kr.replace(/'/g,"\\'")}')">🔊 Listen</button></div>`).join('');
+}
+function renderRiddles(){
+  const r=[
+    {q:"먹을수록 배가 고파지는 것은? (The more you eat, the hungrier you get?)",a:"눈 (nun) — Snow!"},
+    {q:"다리가 네 개인데 걷지 못하는 것은? (Has four legs but can't walk?)",a:"책상 (chaeksang) — A desk!"},
+    {q:"말이 없는데 모두 읽는 것은? (Has no words but everyone reads it?)",a:"표정 (pyojeong) — A facial expression!"},
+    {q:"집은 있는데 문이 없는 것은? (Has a home but no door?)",a:"달팽이 (dalpeng-i) — A snail!"},
+  ];
+  document.getElementById('grid-riddles').innerHTML=r.map((x,i)=>`<div class="wide-card"><h3>수수께끼 ${i+1}</h3><p><strong style="color:var(--text)">❓ ${x.q}</strong></p><details style="margin-top:.8rem;"><summary style="cursor:pointer;color:var(--accent);font-size:.88rem;">정답 보기 (Reveal answer)</summary><p style="margin-top:.5rem;padding:.5rem;background:var(--surface2);border-radius:6px;">💡 ${x.a}</p></details></div>`).join('');
+}
+function renderSeoulMetro(){
+  const lines=[
+    {line:"Line 1",color:"#0052a4",stations:[{en:"Seoul",kr:"서울",rom:"Seoul"},{en:"City Hall",kr:"시청",rom:"Sijeong"},{en:"Jongno 3-ga",kr:"종로3가",rom:"Jongno Samga"},{en:"Dongdaemun",kr:"동대문",rom:"Dongdaemun"}]},
+    {line:"Line 2",color:"#00a84d",stations:[{en:"Hongik University",kr:"홍대입구",rom:"Hongik Ipgu"},{en:"Sinchon",kr:"신촌",rom:"Sinchon"},{en:"Gangnam",kr:"강남",rom:"Gangnam"},{en:"Jamsil",kr:"잠실",rom:"Jamsil"}]},
+    {line:"Line 4",color:"#00a5de",stations:[{en:"Myeongdong",kr:"명동",rom:"Myeongdong"},{en:"Dongdaemun History",kr:"동대문역사",rom:"Dongdaemun Yeoksa"},{en:"Sadang",kr:"사당",rom:"Sadang"}]},
+  ];
+  document.getElementById('grid-seoul_metro').innerHTML=lines.map(line=>`<div class="wide-card" style="margin-bottom:1rem;"><h3 style="display:flex;align-items:center;gap:.6rem;"><span style="background:${line.color};width:12px;height:12px;border-radius:50%;display:inline-block;"></span>${line.line}</h3><table style="width:100%;border-collapse:collapse;font-size:.88rem;margin-top:.8rem;"><thead><tr><th style="background:var(--surface2);padding:.5rem 1rem;text-align:left;color:var(--accent);font-family:'Space Mono',monospace;font-size:.75rem;border-bottom:1px solid var(--border);">Station</th><th style="background:var(--surface2);padding:.5rem 1rem;text-align:left;color:var(--accent);font-family:'Space Mono',monospace;font-size:.75rem;border-bottom:1px solid var(--border);">한글</th><th style="background:var(--surface2);padding:.5rem 1rem;text-align:left;color:var(--accent);font-family:'Space Mono',monospace;font-size:.75rem;border-bottom:1px solid var(--border);">Romanisation</th><th style="background:var(--surface2);padding:.5rem 1rem;text-align:left;font-size:.75rem;border-bottom:1px solid var(--border);">🔊</th></tr></thead><tbody>${line.stations.map(s=>`<tr><td style="padding:.5rem 1rem;border-bottom:1px solid var(--border);color:var(--text-muted);">${s.en}</td><td style="padding:.5rem 1rem;border-bottom:1px solid var(--border);font-family:'Noto Sans KR',sans-serif;font-size:1rem;color:var(--text);">${s.kr}</td><td style="padding:.5rem 1rem;border-bottom:1px solid var(--border);font-family:'Space Mono',monospace;font-size:.8rem;color:var(--accent2);">${s.rom}</td><td style="padding:.5rem 1rem;border-bottom:1px solid var(--border);"><button class="ex-listen" onclick="speak('${s.kr}')">🔊</button></td></tr>`).join('')}</tbody></table></div>`).join('');
+}
+
+renderGrammarParticles();renderHonorifics();renderThisThat();renderCommonMistakes();renderProverbs();renderRiddles();renderSeoulMetro();
+
+// ============================================================
+//  SPEECH ENGINE
+// ============================================================
+function speak(text, rate){
+  rate = rate || 1;
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'ko-KR';
+  utterance.rate = rate < 1 ? 0.5 : 0.9;
+  utterance.pitch = 1.0;
+  utterance.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  let koreanVoice = null;
+  for(let v of voices){
+    if(v.lang === 'ko-KR' || v.lang === 'ko'){koreanVoice = v; break;}
+  }
+  if(koreanVoice) utterance.voice = koreanVoice;
+  window.speechSynthesis.speak(utterance);
+}
+
+// ============================================================
+//  RECORDING
+// ============================================================
+let mediaRecorder=null,audioChunks=[],currentRecordingPhrase='',recordedBlob=null;
+function loadCustomRecordings(){try{return JSON.parse(localStorage.getItem('koAudio')||'{}');}catch{return {};}}
+function saveRecordingToStorage(phrase,dataUrl){const r=loadCustomRecordings();r[phrase]=dataUrl;localStorage.setItem('koAudio',JSON.stringify(r));updateStorageInfo();}
+function deleteRecording(phrase){const r=loadCustomRecordings();delete r[phrase];localStorage.setItem('koAudio',JSON.stringify(r));updateStorageInfo();}
+
+function openRecordingModal(phrase){
+  currentRecordingPhrase=phrase;
+  document.getElementById('recordingPhrase').textContent=phrase;
+  document.getElementById('recordingModal').style.display='flex';
+  document.getElementById('recordingStatus').textContent='Ready. Click Start.';
+  document.getElementById('startRecordBtn').style.display='inline-block';
+  document.getElementById('stopRecordBtn').style.display='none';
+  document.getElementById('playbackBtn').style.display='none';
+  document.getElementById('saveRecordingBtn').style.display='none';
+  recordedBlob=null;
+  const hasRec=hasRecording(phrase);
+  document.getElementById('existingRecNote').style.display=hasRec?'block':'none';
+  document.getElementById('deleteThisRecBtn').style.display=hasRec?'inline-block':'none';
+}
+function closeRecordingModal(){document.getElementById('recordingModal').style.display='none';if(mediaRecorder?.state==='recording')mediaRecorder.stop();}
+async function startRecording(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaRecorder=new MediaRecorder(stream);audioChunks=[];
+    mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
+    mediaRecorder.onstop=()=>{
+      recordedBlob=new Blob(audioChunks,{type:'audio/webm'});
+      const url=URL.createObjectURL(recordedBlob);
+      document.getElementById('playbackBtn').style.display='inline-block';
+      document.getElementById('playbackBtn').onclick=()=>new Audio(url).play();
+      document.getElementById('saveRecordingBtn').style.display='inline-block';
+      document.getElementById('recordingStatus').textContent='✅ Done! Playback or save.';
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    mediaRecorder.start();
+    document.getElementById('startRecordBtn').style.display='none';
+    document.getElementById('stopRecordBtn').style.display='inline-block';
+    document.getElementById('recordingStatus').textContent='🔴 Recording…';
+  }catch{alert('Microphone access denied.');}
+}
+function stopRecording(){if(mediaRecorder?.state==='recording'){mediaRecorder.stop();document.getElementById('startRecordBtn').style.display='inline-block';document.getElementById('stopRecordBtn').style.display='none';}}
+function saveRecording(){
+  if(!recordedBlob){alert('Nothing to save!');return;}
+  const reader=new FileReader();
+  reader.onloadend=()=>{saveRecordingToStorage(currentRecordingPhrase,reader.result);alert(`✅ Saved: "${currentRecordingPhrase}"`);closeRecordingModal();refreshAllGrids();};
+  reader.readAsDataURL(recordedBlob);
+}
+function deleteCurrentRec(){
+  if(!confirm(`Delete recording for "${currentRecordingPhrase}"?`))return;
+  deleteRecording(currentRecordingPhrase);
+  document.getElementById('existingRecNote').style.display='none';
+  document.getElementById('deleteThisRecBtn').style.display='none';
+  refreshAllGrids();
+}
+function updateStorageInfo(){const c=Object.keys(loadCustomRecordings()).length;const el=document.getElementById('storageInfo');if(el)el.textContent=`📀 ${c} recording${c!==1?'s':''} saved`;}
+function refreshAllGrids(){Object.keys(VOCAB).forEach(k=>renderGrid(k,VOCAB[k]));}
+function exportAllRecordings(){const r=loadCustomRecordings();if(!Object.keys(r).length){alert('No recordings!');return;}const b=new Blob([JSON.stringify(r)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`korean_recordings_${new Date().toISOString().split('T')[0]}.json`;a.click();URL.revokeObjectURL(u);}
+function importRecordings(file){const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);localStorage.setItem('koAudio',JSON.stringify({...loadCustomRecordings(),...d}));alert(`Imported ${Object.keys(d).length} recordings!`);updateStorageInfo();refreshAllGrids();}catch{alert('Invalid file!');}};r.readAsText(file);}
+
+// ============================================================
+//  RECORDINGS MANAGER
+// ============================================================
+function renderRecordingsManager(){
+  const el=document.getElementById('recManagerContent');if(!el)return;
+  const recs=loadCustomRecordings();const keys=Object.keys(recs);
+  if(keys.length===0){el.innerHTML=`<div class="wide-card"><h3>No recordings yet</h3><p>Record your voice on any vocab card — it will appear here.</p></div>`;return;}
+  el.innerHTML=`<div class="rec-manager"><h3>🎙️ ${keys.length} Saved Recording${keys.length!==1?'s':''}</h3><p style="font-size:.82rem;color:var(--text-muted);margin-bottom:.8rem;">Click ▶ to play, 🗑️ to delete.</p><div class="rec-list" id="recList"></div><div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;"><button class="btn-outline" onclick="if(confirm('Delete ALL?')){localStorage.removeItem('koAudio');updateStorageInfo();renderRecordingsManager();refreshAllGrids();}">🗑️ Delete All</button><button class="btn-outline" onclick="exportAllRecordings()">📥 Export</button></div></div>`;
+  const list=document.getElementById('recList');
+  keys.sort().forEach(phrase=>{
+    const audioData=recs[phrase];const item=document.createElement('div');item.className='rec-item';
+    item.innerHTML=`<span class="rec-item-phrase" title="${phrase}">${phrase}</span><button style="background:none;border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--accent2);cursor:pointer;font-size:.75rem;">▶ Play</button><button style="background:none;border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--red);cursor:pointer;font-size:.75rem;">🗑️ Delete</button>`;
+    const audioObj=new Audio(audioData);
+    item.querySelectorAll('button')[0].onclick=()=>{audioObj.currentTime=0;audioObj.play();};
+    item.querySelectorAll('button')[1].onclick=()=>{if(confirm(`Delete "${phrase}"?`)){deleteRecording(phrase);renderRecordingsManager();refreshAllGrids();}};
+    list.appendChild(item);
+  });
+}
+
+// ============================================================
+//  QUIZ
+// ============================================================
+let quizStats=JSON.parse(localStorage.getItem('koQuizStats')||'{}');
+function saveStats(){localStorage.setItem('koQuizStats',JSON.stringify(quizStats));}
+function getTopicScore(topic){const s=quizStats[topic];if(!s||s.total===0)return null;return Math.round(s.correct/s.total*100);}
+function recordAnswer(topic,correct){if(!quizStats[topic])quizStats[topic]={correct:0,total:0};quizStats[topic].total++;if(correct)quizStats[topic].correct++;saveStats();}
+
+let quizQuestions=[],quizIdx=0,quizScore=0;
+
+const TOPIC_LABELS={
+  numbers:"Numbers",natural:"Nature",dates:"Dates",quantities:"Quantities",directions:"Directions",
+  time:"Time",adjectives:"Adjectives",animals:"Animals",basic_conversation:"Basic Conversation",
+  body:"Body",buildings:"Buildings",colours:"Colours",common_phrases:"Common Phrases",
+  cooking:"Cooking",countries:"Countries",drinks:"Drinks",eating_out:"Eating Out",
+  korean_restaurant:"Korean Restaurant",emotions:"Emotions",family:"Family",greetings:"Greetings",
+  health:"Health",holidays:"Holidays",home:"Home",machines:"Machines",motoring:"Motoring",
+  people:"People",places:"Places",professions:"Professions",pronouns:"Pronouns",
+  school:"School",seasons:"Seasons",special_occasions:"Special Occasions",sport:"Sport",
+  kpop:"K-Pop & Culture",slang:"Slang & Internet",verbs:"Verbs",weather:"Weather",counters:"Counters",
+};
+
+function buildPool(topicKeys){const pool=[];topicKeys.forEach(k=>{if(VOCAB[k])VOCAB[k].forEach(item=>pool.push({item,topic:k}));});return pool;}
+function buildQuestions(pool,n=20){
+  const allItems=Object.values(VOCAB).flat();
+  const shuffled=[...pool].sort(()=>Math.random()-0.5).slice(0,n);
+  return shuffled.map(({item,topic})=>{
+    const wrong=allItems.filter(x=>x.en!==item.en).sort(()=>Math.random()-0.5).slice(0,3);
+    const opts=[...wrong,item].sort(()=>Math.random()-0.5);
+    return {kr:item.kr,rom:item.rom,opts:opts.map(o=>o.en),answer:item.en,topic};
+  });
+}
+function loadQuiz(){
+  const wrap=document.getElementById('quizWrap');if(!wrap)return;
+  wrap.innerHTML=buildQuizHome();attachQuizEvents();
+}
+function buildQuizHome(){
+  const allTopics=Object.keys(TOPIC_LABELS).filter(k=>VOCAB[k]);
+  const weakTopics=allTopics.filter(k=>{const s=getTopicScore(k);return s!==null&&s<70;});
+  const totalQ=Object.values(quizStats).reduce((a,b)=>a+b.total,0);
+  const totalC=Object.values(quizStats).reduce((a,b)=>a+b.correct,0);
+  return `
+    ${totalQ>0?`<div style="font-size:.8rem;color:var(--accent2);margin-bottom:1rem;">🔥 ${totalQ} questions answered · ${Math.round(totalC/totalQ*100)}% overall</div>`:''}
+    <div class="wide-card" style="margin-bottom:1rem;">
+      <h3>Choose your quiz mode</h3>
+      <div class="quiz-modes">
+        <button class="quiz-mode-btn active" id="modeAll">🌐 All Topics</button>
+        <button class="quiz-mode-btn" id="modePick">📌 Pick Topics</button>
+        ${weakTopics.length>0?`<button class="quiz-mode-btn" id="modeWeak">🎯 Weak Spots (${weakTopics.length})</button>`:''}
+      </div>
+      <div id="topicPicker" style="display:none;">
+        <div class="topic-grid">${allTopics.map(k=>{const score=getTopicScore(k);let chipScore='',chipClass='';if(score!==null){chipClass=score>=80?'good':score>=50?'mid':'bad';chipScore=`<span class="chip-score ${chipClass}">${score}%</span>`;}return `<div class="topic-chip" data-topic="${k}" onclick="this.classList.toggle('selected')">${TOPIC_LABELS[k]||k}${chipScore}</div>`;}).join('')}</div>
+      </div>
+      <div style="margin-top:1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;">
+        <select id="quizLength" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.3rem .6rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;">
+          <option value="10">10 — Quick</option><option value="20" selected>20 — Standard</option><option value="40">40 — Long</option><option value="999">All</option>
+        </select>
+        <button class="btn-primary" id="startQuizBtn">Start Quiz →</button>
+      </div>
+    </div>
+    ${buildStatsPanel(allTopics)}`;
+}
+function buildStatsPanel(allTopics){
+  const attempted=allTopics.filter(k=>quizStats[k]&&quizStats[k].total>0);
+  if(attempted.length===0)return `<div class="wide-card"><h3>📊 Progress</h3><p style="color:var(--text-dim);">Complete quizzes to see stats.</p></div>`;
+  const bars=attempted.sort((a,b)=>(getTopicScore(a)||0)-(getTopicScore(b)||0)).map(k=>{const s=getTopicScore(k)||0;const col=s>=80?'var(--green)':s>=50?'var(--accent)':'var(--red)';return`<div class="topic-bar-row"><div class="topic-bar-label">${TOPIC_LABELS[k]||k}</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:${s}%;background:${col};"></div></div><div class="topic-bar-pct">${s}%</div></div>`;}).join('');
+  const totalQ=Object.values(quizStats).reduce((a,b)=>a+b.total,0);const totalC=Object.values(quizStats).reduce((a,b)=>a+b.correct,0);
+  return`<div class="stats-screen"><h3>📊 Progress</h3><div class="stats-summary"><div class="stat-pill gold"><div class="num">${totalQ}</div><div class="lbl">Answered</div></div><div class="stat-pill green"><div class="num">${totalC}</div><div class="lbl">Correct</div></div><div class="stat-pill red"><div class="num">${totalQ-totalC}</div><div class="lbl">Missed</div></div><div class="stat-pill"><div class="num" style="color:var(--accent2);">${totalQ>0?Math.round(totalC/totalQ*100):0}%</div><div class="lbl">Accuracy</div></div></div><div class="topic-bars">${bars}</div><div class="btn-row"><button class="btn-outline" onclick="if(confirm('Reset?')){quizStats={};saveStats();loadQuiz();}">🗑️ Reset</button></div></div>`;
+}
+function attachQuizEvents(){
+  const modeAll=document.getElementById('modeAll'),modePick=document.getElementById('modePick'),modeWeak=document.getElementById('modeWeak'),picker=document.getElementById('topicPicker'),startBtn=document.getElementById('startQuizBtn');
+  let mode='all';
+  if(modeAll)modeAll.onclick=()=>{mode='all';[modeAll,modePick,modeWeak].forEach(b=>b&&b.classList.remove('active'));modeAll.classList.add('active');if(picker)picker.style.display='none';};
+  if(modePick)modePick.onclick=()=>{mode='pick';[modeAll,modePick,modeWeak].forEach(b=>b&&b.classList.remove('active'));modePick.classList.add('active');if(picker)picker.style.display='block';};
+  if(modeWeak)modeWeak.onclick=()=>{mode='weak';[modeAll,modePick,modeWeak].forEach(b=>b&&b.classList.remove('active'));modeWeak.classList.add('active');if(picker)picker.style.display='none';};
+  if(startBtn)startBtn.onclick=()=>{
+    const allTopics=Object.keys(TOPIC_LABELS).filter(k=>VOCAB[k]);
+    let topics=[];
+    if(mode==='all')topics=allTopics;
+    else if(mode==='weak'){topics=allTopics.filter(k=>{const s=getTopicScore(k);return s===null||s<70;});if(!topics.length)topics=allTopics;}
+    else{topics=Array.from(document.querySelectorAll('.topic-chip.selected')).map(c=>c.dataset.topic);if(!topics.length)topics=allTopics;}
+    const n=parseInt(document.getElementById('quizLength').value)||20;
+    const pool=buildPool(topics);
+    quizQuestions=buildQuestions(pool,Math.min(n,pool.length));quizIdx=0;quizScore=0;showQuestion();
+  };
+}
+function showQuestion(){
+  const wrap=document.getElementById('quizWrap');if(!wrap)return;
+  if(quizIdx>=quizQuestions.length){showResults();return;}
+  const q=quizQuestions[quizIdx];
+  const pips=quizQuestions.map((_,i)=>`<div class="quiz-pip ${i<quizIdx?'done':''}"></div>`).join('');
+  wrap.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;flex-wrap:wrap;gap:.4rem;">
+      <span style="font-size:.78rem;color:var(--text-dim);">Question ${quizIdx+1} / ${quizQuestions.length}</span>
+      <span style="font-size:.72rem;background:var(--surface2);padding:2px 8px;border-radius:10px;color:var(--accent2);">📌 ${TOPIC_LABELS[q.topic]||q.topic}</span>
+      <span style="font-size:.78rem;color:var(--green);">✅ ${quizScore}</span>
+    </div>
+    <div class="quiz-progress">${pips}</div>
+    <div class="quiz-q">What does this mean?
+      <div style="display:flex;align-items:center;gap:.8rem;margin-top:.5rem;flex-wrap:wrap;">
+        <span style="font-family:'Noto Sans KR',sans-serif;font-size:2rem;font-weight:700;color:var(--text);">${q.kr}</span>
+        <span style="font-family:'Space Mono',monospace;font-size:.9rem;color:var(--accent2);">[${q.rom}]</span>
+        <button class="ex-listen" style="font-size:1.2rem;" onclick="speak('${q.kr.replace(/'/g,"\\'")}')">🔊</button>
+      </div>
+    </div>
+    <div class="quiz-options" id="qopts">${q.opts.map(o=>`<button class="quiz-opt" onclick="answerQ(this,'${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}','${q.topic}',this.parentElement)">${o}</button>`).join('')}</div>
+    <div class="quiz-feedback" id="qfb"></div>
+    <button class="btn-primary" id="qnext" disabled onclick="quizIdx++;showQuestion()">Next →</button>`;
+}
+function answerQ(btn,chosen,correct,topic,container){
+  container.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('qfb');const isCorrect=chosen===correct;
+  recordAnswer(topic,isCorrect);
+  if(isCorrect){btn.classList.add('correct');fb.textContent='✅ 정답!';fb.className='quiz-feedback ok';quizScore++;}
+  else{btn.classList.add('wrong');fb.textContent=`❌ 정답: ${correct}`;fb.className='quiz-feedback nope';container.querySelectorAll('.quiz-opt').forEach(b=>{if(b.textContent===correct)b.classList.add('correct');});}
+  document.getElementById('qnext').disabled=false;
+}
+function showResults(){
+  const wrap=document.getElementById('quizWrap');const total=quizQuestions.length,pct=Math.round(quizScore/total*100);
+  const medal=pct===100?'🏆':pct>=80?'🌟':pct>=60?'👍':'💪';
+  const msg=pct===100?'완벽해요! Perfect!':pct>=80?'아주 잘했어요! Great work!':pct>=60?'잘했어요! Keep practising!':'힘내세요! Keep going!';
+  const topicSet=[...new Set(quizQuestions.map(q=>q.topic))];
+  const breakdown=topicSet.map(k=>{const s=getTopicScore(k)||0;const col=s>=80?'var(--green)':s>=50?'var(--accent)':'var(--red)';return`<div class="topic-bar-row"><div class="topic-bar-label">${TOPIC_LABELS[k]||k}</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:${s}%;background:${col};"></div></div><div class="topic-bar-pct">${s}%</div></div>`;}).join('');
+  wrap.innerHTML=`<div class="stats-screen"><h3>${medal} 완료! Quiz Complete!</h3><div class="stats-summary"><div class="stat-pill gold"><div class="num">${total}</div><div class="lbl">Questions</div></div><div class="stat-pill green"><div class="num">${quizScore}</div><div class="lbl">Correct</div></div><div class="stat-pill red"><div class="num">${total-quizScore}</div><div class="lbl">Missed</div></div><div class="stat-pill"><div class="num" style="color:var(--accent2);">${pct}%</div><div class="lbl">Score</div></div></div><p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1rem;">${msg}</p>${breakdown?`<div class="topic-bars">${breakdown}</div>`:''}<div class="btn-row"><button class="btn-primary" onclick="loadQuiz()">🏠 Back</button><button class="btn-outline" onclick="const pool=buildPool(${JSON.stringify(topicSet)});quizQuestions=buildQuestions(pool,${total});quizIdx=0;quizScore=0;showQuestion();">🔄 Same topics again</button></div></div>`;
+}
+
+// ============================================================
+//  NAVIGATION
+// ============================================================
+const sideItems=document.querySelectorAll('.sidebar-item');
+const panels=document.querySelectorAll('.panel');
+sideItems.forEach(item=>{
+  item.addEventListener('click',()=>{
+    const target=item.dataset.panel;
+    sideItems.forEach(i=>i.classList.remove('active'));item.classList.add('active');
+    panels.forEach(p=>p.classList.remove('active'));
+    const panel=document.getElementById('panel-'+target);if(panel)panel.classList.add('active');
+    if(target==='quiz')loadQuiz();
+    if(target==='recordings_manager')renderRecordingsManager();
+    if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');
+  });
+});
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
+document.getElementById('globalSearch').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();if(!q)return;
+  for(const[cat,items]of Object.entries(VOCAB)){
+    const m=items.find(i=>i.rom.toLowerCase().includes(q)||i.en.toLowerCase().includes(q)||(i.kr&&i.kr.includes(q)));
+    if(m){document.querySelector(`[data-panel="${cat}"]`)?.click();break;}
+  }
+});
+document.getElementById('exportAllBtn').addEventListener('click',exportAllRecordings);
+document.getElementById('importAllBtn').addEventListener('click',()=>{const inp=document.createElement('input');inp.type='file';inp.accept='application/json';inp.onchange=e=>{if(e.target.files[0])importRecordings(e.target.files[0]);};inp.click();});
+document.getElementById('manageRecBtn').addEventListener('click',()=>{document.querySelector('[data-panel="recordings_manager"]')?.click();});
+document.getElementById('startRecordBtn').addEventListener('click',startRecording);
+document.getElementById('stopRecordBtn').addEventListener('click',stopRecording);
+document.getElementById('saveRecordingBtn').addEventListener('click',saveRecording);
+document.getElementById('deleteThisRecBtn').addEventListener('click',deleteCurrentRec);
+document.getElementById('closeModalBtn').addEventListener('click',closeRecordingModal);
+
+updateStorageInfo();
+loadQuiz();
+</script>
+</body>
+</html>
