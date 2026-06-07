@@ -216,6 +216,7 @@
       <div class="sidebar-item" data-panel="texting"><span class="icon">💬</span>Texting & Chat</div>
       <div class="sidebar-item" data-panel="love"><span class="icon">💕</span>Love & Relationships</div>
       <div class="sidebar-item" data-panel="cafe"><span class="icon">☕</span>Café & Food Culture</div>
+      <div class="sidebar-item" data-panel="talking_trash"><span class="icon">🗑️</span>Talking Trash 💅</div>
       <div class="sidebar-item" data-panel="slang"><span class="icon">😜</span>Slang & Internet</div>
       <div class="sidebar-item" data-panel="verbs"><span class="icon">🏃</span>Verbs</div>
       <div class="sidebar-item" data-panel="weather"><span class="icon">🌤️</span>Weather</div>
@@ -303,6 +304,17 @@
     <div class="panel" id="panel-texting"><div class="panel-header"><h2>💬 Texting & Chat</h2><p>KakaoTalk, Instagram DMs, and how Koreans write on their phones</p></div><div class="card-grid" id="grid-texting"></div></div>
     <div class="panel" id="panel-love"><div class="panel-header"><h2>💕 Love & Relationships</h2><p>Dating vocab, couple terms, and everything from first crush to heartbreak</p></div><div class="card-grid" id="grid-love"></div></div>
     <div class="panel" id="panel-cafe"><div class="panel-header"><h2>☕ Café & Food Culture</h2><p>Korea's café obsession, street food, and food-related phrases Koreans live by</p></div><div class="card-grid" id="grid-cafe"></div></div>
+
+    <div class="panel" id="panel-talking_trash">
+      <div class="panel-header">
+        <h2>🗑️ Talking Trash 💅</h2>
+        <p>Venting, complaining, shade-throwing and spilling the tea — all in Korean. Great for understanding dramas, friend group chats, and expressing frustration like a local.</p>
+      </div>
+      <div style="background:rgba(232,109,109,.08);border:1px solid rgba(232,109,109,.2);border-radius:10px;padding:.7rem 1rem;margin-bottom:1.2rem;font-size:.82rem;color:var(--text-muted);">
+        ⚠️ Some phrases here are blunt or rude — they're included so you can <strong style="color:var(--text)">recognise</strong> them in dramas, conversations, and real life. Use with care and the right tone!
+      </div>
+      <div class="card-grid" id="grid-talking_trash"></div>
+    </div>
 
     <!-- INTERMEDIATE -->
     <div class="panel" id="panel-intro_intermediate">
@@ -1552,6 +1564,120 @@ const VOCAB = {
     {rom:"banchan",kr:"반찬",en:"Side dishes served with rice (always included)"},
     {rom:"gukbap",kr:"국밥",en:"Rice in soup (classic hangover / comfort food)"},
   ],
+
+  // ============================================================
+  //  TALKING TRASH 💅 — venting, shade, opinions about people
+  // ============================================================
+  talking_trash:[
+
+    // ── BASIC DISLIKE ──────────────────────────────────────────
+    {rom:"na geu saram sireo",kr:"나 그 사람 싫어",en:"I don't like that person (casual, direct)"},
+    {rom:"geu namja/yeoja sireo",kr:"그 남자/여자 싫어",en:"I don't like that guy / that girl"},
+    {rom:"geu saram neomu sireo",kr:"그 사람 너무 싫어",en:"I really can't stand that person"},
+    {rom:"geu saram ma-eum-e an deureowa",kr:"그 사람 마음에 안 들어",en:"That person doesn't appeal to me / I don't like them"},
+    {rom:"geu namja nae seutaeil ani-ya",kr:"그 남자 내 스타일 아니야",en:"That guy is not my type at all"},
+    {rom:"wae geu saram iri haengdong-hae?",kr:"왜 그 사람 이리 행동해?",en:"Why does that person act like this?"},
+    {rom:"geu saram ttaemune jjajjeungna",kr:"그 사람 때문에 짜증나",en:"That person is so annoying / frustrating"},
+    {rom:"jjajjeungna",kr:"짜증나",en:"So annoying / I'm irritated (very commonly said)"},
+    {rom:"neomu jjajjeungeun saram",kr:"너무 짜증나는 사람",en:"Such an irritating person"},
+    {rom:"geu saram bogisireo",kr:"그 사람 보기 싫어",en:"I hate seeing that person's face"},
+
+    // ── TALKING BEHIND SOMEONE'S BACK / GOSSIP ─────────────────
+    {rom:"isae-gi haja",kr:"이새기 얘기하자",en:"Let's talk about this (gossip opener — casual)"},
+    {rom:"deureobwa",kr:"들어봐",en:"Listen to this / Hear me out (gossip incoming)"},
+    {rom:"ya, i-geo bimil-indo",kr:"야, 이거 비밀인데",en:"Hey, this is a secret, but… (classic gossip opener)"},
+    {rom:"siljjeoro malhamyeon",kr:"솔직히 말하면",en:"Honestly speaking / To be real with you"},
+    {rom:"geu saram jinjja mwoninji mollasseo",kr:"그 사람 진짜 뭔지 몰랐어",en:"I had no idea what that person was really like"},
+    {rom:"nado geureon jul mollasseo",kr:"나도 그런 줄 몰랐어",en:"I didn't know they were like that either"},
+    {rom:"geu saram dwidammal hae",kr:"그 사람 뒷담말 해",en:"That person talks behind people's backs"},
+    {rom:"dwidammal haji ma",kr:"뒷담말 하지 마",en:"Don't talk behind people's backs"},
+    {rom:"geu saram dwidammal deureosseo",kr:"그 사람 뒷담말 들었어",en:"I heard what they said behind my back"},
+    {rom:"inja hae",kr:"인자 해",en:"Two-faced / Acts nice to your face"},
+    {rom:"apeseo dallae, dwieso ssok-inda",kr:"앞에서 달래, 뒤에서 속인다",en:"Sweet to your face, deceives behind your back"},
+    {rom:"geu saram isanghae",kr:"그 사람 이상해",en:"That person is weird / something's off about them"},
+    {rom:"geu saram mitji ma",kr:"그 사람 믿지 마",en:"Don't trust that person"},
+    {rom:"geu saram georjis-mal haesseo",kr:"그 사람 거짓말 했어",en:"That person lied"},
+    {rom:"na-hante geojitmallae",kr:"나한테 거짓말 래",en:"They lied to me"},
+
+    // ── VENTING / COMPLAINING ───────────────────────────────────
+    {rom:"na jinjja hwanaseo",kr:"나 진짜 화나서",en:"I'm genuinely so angry"},
+    {rom:"hwaga na",kr:"화가 나",en:"I'm angry / It makes me angry"},
+    {rom:"neomu hae",kr:"너무해",en:"That's too much / So unfair / How could they"},
+    {rom:"geu saram neomu hae",kr:"그 사람 너무해",en:"They went too far / That person is too much"},
+    {rom:"eotteon saram-i geuraeyo",kr:"어떤 사람이 그래요",en:"What kind of person does that?! (outraged)"},
+    {rom:"eotteoke geurael su isseo?",kr:"어떻게 그럴 수 있어?",en:"How could they do that?!"},
+    {rom:"nabbeun saram",kr:"나쁜 사람",en:"A bad person"},
+    {rom:"geu saram jinjja nabba",kr:"그 사람 진짜 나빠",en:"That person is genuinely bad / awful"},
+    {rom:"mot doesseo",kr:"못됐어",en:"They're terrible / That was horrible of them"},
+    {rom:"geu saram mot doesseo",kr:"그 사람 못됐어",en:"That person is horrible / nasty"},
+    {rom:"eoksul hae",kr:"억울해",en:"It's so unfair / I feel wronged"},
+    {rom:"na-man babo ya",kr:"나만 바보야",en:"Am I the only idiot here? / Why am I always the fool"},
+    {rom:"neon wae nareul molle?",kr:"넌 왜 나를 몰라?",en:"Why don't you know/understand me?"},
+    {rom:"na ireoke danghaesseo",kr:"나 이렇게 당했어",en:"This is what happened to me / I got treated like this"},
+    {rom:"bunhae",kr:"분해",en:"I'm fuming / So infuriating"},
+    {rom:"na bunhaeseomichyeo",kr:"나 분해서 미치겠어",en:"I'm so mad I could explode"},
+    {rom:"han ineun jit-eo-sseo",kr:"한이 맺혔어",en:"I have deep resentment / This really left a mark on me"},
+
+    // ── CALLING SOMEONE OUT ─────────────────────────────────────
+    {rom:"geu saram seo-lo geureonikka",kr:"그 사람 서로 그러니까",en:"That person is always like that / Same old them"},
+    {rom:"wonrae geureon saram-iya",kr:"원래 그런 사람이야",en:"They were always like that / That's just who they are"},
+    {rom:"geu saram jasik doeji marasseo",kr:"그 사람 자식 됩지 마랬어",en:"I told you not to trust them"},
+    {rom:"nae malsseum deutji",kr:"내 말씀 듣지",en:"See? I told you so"},
+    {rom:"geobangji-ya",kr:"거봐지야",en:"See? I said so! / Told you!"},
+    {rom:"geu saram igijeog-igo nasbbeun saram-iya",kr:"그 사람 이기적이고 나쁜 사람이야",en:"That person is selfish and awful"},
+    {rom:"igijeog-i-ya",kr:"이기적이야",en:"So selfish"},
+    {rom:"jal-nan cheok hae",kr:"잘난 척 해",en:"Acts like they're so great / Big-headed / Shows off"},
+    {rom:"jal-nan cheok ha-ji ma",kr:"잘난 척 하지 마",en:"Stop showing off / Don't act all high and mighty"},
+    {rom:"eorin ae-cheo-reom gureo",kr:"어린 애처럼 굴어",en:"Acts like a child"},
+    {rom:"yu-chi hae",kr:"유치해",en:"So childish / Immature"},
+    {rom:"chaem-i-eopseo",kr:"재미없어",en:"No personality / So boring / Humourless"},
+    {rom:"geu saram jinjja cham-i-eopseo",kr:"그 사람 진짜 재미없어",en:"That person is honestly so dull"},
+    {rom:"geunyang mwol haedo an majeo",kr:"그냥 뭘 해도 안 맞어",en:"We just don't click at all / Nothing about them works for me"},
+
+    // ── JEALOUSY & SHADE ────────────────────────────────────────
+    {rom:"geu saram wae jeo-reoke jal haeyo?",kr:"그 사람 왜 저렇게 잘 해요?",en:"Why is that person so good at everything? (jealous)"},
+    {rom:"bae apa",kr:"배 아파",en:"I'm jealous / It hurts (lit. 'my stomach hurts' — Korean jealousy phrase)"},
+    {rom:"geu saram bae apa",kr:"그 사람 보면 배 아파",en:"Seeing that person makes me jealous"},
+    {rom:"imi-ha-ge",kr:"얄밉게",en:"In an infuriating/smug way"},
+    {rom:"geu saram jinjja yalmibeo",kr:"그 사람 진짜 얄미워",en:"That person is so smug and annoying"},
+    {rom:"irirang manhi beoreosseo",kr:"이리랑 많이 벌었어",en:"Made so much money doing that — (jealous shade)"},
+    {rom:"unjeona nal nae ryeobo",kr:"운전으로 날 내려봐",en:"Always looks down on me"},
+    {rom:"na-reul mu-si hae",kr:"나를 무시해",en:"They look down on me / Ignores me"},
+    {rom:"geu saram na murehae",kr:"그 사람 나 무례해",en:"That person is rude to me"},
+    {rom:"murye hae",kr:"무례해",en:"So rude / Impolite"},
+
+    // ── BREAKUP TALK / EX DRAMA ─────────────────────────────────
+    {rom:"geu namja/yeoja jinjja sireo",kr:"그 남자/여자 진짜 싫어",en:"I genuinely can't stand that guy/girl"},
+    {rom:"naegi wae geuraeya hae",kr:"내가 왜 그래야 해",en:"Why do I have to deal with this?"},
+    {rom:"eogijiso ga",kr:"어기 지소 가",en:"Just get out of here / Go away (frustrated)"},
+    {rom:"dasi boogeosseo",kr:"다시 보기 싫어",en:"I don't want to see them again"},
+    {rom:"yeonragi kkeunhyeosseo",kr:"연락이 끊혔어",en:"They cut off contact / Ghosted me"},
+    {rom:"cham su ga eopseo",kr:"참을 수가 없어",en:"I can't take it anymore / Can't tolerate this"},
+    {rom:"da kkeunnasseo",kr:"다 끝났어",en:"It's all over / We're completely done"},
+    {rom:"eojjeom geureon saram-i isseo",kr:"어쩜 그런 사람이 있어",en:"How can someone like that exist?"},
+    {rom:"hu-hwega dweyo",kr:"후회가 돼요",en:"I regret it (meeting/dating them)"},
+    {rom:"sigannal lyeosseo",kr:"시간 낭비였어",en:"What a waste of time"},
+    {rom:"naneun mol-ra-bwasseo",kr:"나는 몰라봤어",en:"I misjudged them / I didn't see what they were like"},
+    {rom:"apeseo-neun jal hago dwie-seo-neun ssok-yeosseo",kr:"앞에서는 잘 하고 뒤에서는 속였어",en:"They were nice to my face but deceived me behind my back"},
+
+    // ── FUNNY / PETTY SHADE ─────────────────────────────────────
+    {rom:"geu saram eolgu bo-gido sireo",kr:"그 사람 얼굴 보기도 싫어",en:"I don't even want to see their face"},
+    {rom:"ireumdo deutkhi sireo",kr:"이름도 듣기 싫어",en:"I don't even want to hear their name"},
+    {rom:"saenggak-do hagi sireo",kr:"생각도 하기 싫어",en:"I don't even want to think about them"},
+    {rom:"mannal pilyo eopseo",kr:"만날 필요 없어",en:"No need to see them ever again"},
+    {rom:"geu saram iseo?",kr:"그 사람 있어?",en:"Is that person there? (asking before entering a place)"},
+    {rom:"geu saram eopseumyeon johaesseo",kr:"그 사람 없으면 좋았어",en:"I wish that person wasn't there"},
+    {rom:"saengsaengki itjja",kr:"생생히 있잖아",en:"They're very much still there — ugh (petty complaint)"},
+    {rom:"wae jeo saram geo-gi isseo",kr:"왜 저 사람 거기 있어",en:"Why is that person there (in an annoyed way)"},
+    {rom:"na-hante waegi wae hae",kr:"나한테 왜 얘기를 왜 해",en:"Why are they even talking to me"},
+    {rom:"na moreun cheok hae",kr:"나 모르는 척 해",en:"Pretend you don't know me (around them)"},
+    {rom:"sunhan cheok hada",kr:"순한 척 하다",en:"Acts innocent / Plays the sweet one"},
+    {rom:"ppeonppeonhae",kr:"뻔뻔해",en:"So shameless / Brazen / Has a cheek"},
+    {rom:"kkochira",kr:"꼴불견",en:"Eyesore / Disgraceful to look at"},
+    {rom:"uyeo",kr:"우여",en:"Ew / Yuck (reaction to someone gross)"},
+    {rom:"hyingeureo bwa",kr:"흥으로 봐",en:"Look at them (with disdain / side-eye energy)"},
+  ],
+
 };
 
 // ============================================================
@@ -1883,7 +2009,7 @@ const TOPIC_LABELS={
   health:"Health",holidays:"Holidays",home:"Home",machines:"Machines",motoring:"Motoring",
   people:"People",places:"Places",professions:"Professions",pronouns:"Pronouns",
   school:"School",seasons:"Seasons",special_occasions:"Special Occasions",sport:"Sport",
-  kpop:"K-Pop & Culture",kdrama:"K-Drama Phrases",everyday:"Everyday Korean",texting:"Texting & Chat",love:"Love & Relationships",cafe:"Café & Food Culture",slang:"Slang & Internet",verbs:"Verbs",weather:"Weather",counters:"Counters",
+  kpop:"K-Pop & Culture",kdrama:"K-Drama Phrases",everyday:"Everyday Korean",texting:"Texting & Chat",love:"Love & Relationships",cafe:"Café & Food Culture",talking_trash:"Talking Trash 💅",slang:"Slang & Internet",verbs:"Verbs",weather:"Weather",counters:"Counters",
 };
 
 function buildPool(topicKeys){const pool=[];topicKeys.forEach(k=>{if(VOCAB[k])VOCAB[k].forEach(item=>pool.push({item,topic:k}));});return pool;}
